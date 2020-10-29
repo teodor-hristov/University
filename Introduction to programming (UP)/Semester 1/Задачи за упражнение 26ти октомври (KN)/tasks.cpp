@@ -62,4 +62,14 @@ int main () {
         }
     std::cout << newNum;
  */   
+
+    //Task 5
+    int hour, minutes;
+    double hDeg, mDeg;
+
+    mDeg = 360 / 60; // 6 deg
+    hDeg = 360 / 12; // 30 deg  
+
+    std::cin >> hour >> minutes;
+
 }
