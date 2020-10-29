@@ -41,4 +41,25 @@ int main () {
     }
 
     std::cout << status; */
+
+    //Task 3
+/*
+    int num, newNum = 0;
+
+    std::cin >> num;
+
+    for(int i = 0; i < 15; i++) {
+        if(num & 1) {
+            newNum = (newNum + 1) << 1;
+        } else {
+            newNum = newNum << 1;
+        }
+        num = num >> 1;
+    }
+
+    if(num & 1) {
+            newNum = newNum + 1;
+        }
+    std::cout << newNum;
+ */   
 }
