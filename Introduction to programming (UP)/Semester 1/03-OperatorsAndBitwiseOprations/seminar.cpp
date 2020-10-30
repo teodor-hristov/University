@@ -73,7 +73,7 @@ int main() {
 
     // cout << count << endl;
 
-    //Task 6
+    //Task 6a
 
     // int n;
     // bool status = 0;
@@ -92,7 +92,13 @@ int main() {
     // }
 
     // cout << n << endl;
-    
+
+    //Task 6b
+
+    int n;
+
+    cin >> n;
+    cout << ~n + 1 << endl; 
 
     //Task 7 
 
