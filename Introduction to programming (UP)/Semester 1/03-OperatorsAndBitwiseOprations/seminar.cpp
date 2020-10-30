@@ -95,10 +95,10 @@ int main() {
 
     //Task 6b
 
-    int n;
+    // int n;
 
-    cin >> n;
-    cout << ~n + 1 << endl; 
+    // cin >> n;
+    // cout << ~n + 1 << endl; 
 
     //Task 7 
 
