@@ -46,14 +46,15 @@ int main() {
 
     //Task 4
 
-    // 101
     // int N;
+    // int mask;
 
     // cin >> N;
 
     // for(int i = 0; i < 32; i++) {
-    //     if(N <= (1 << i)) {
-    //         cout << (1 << i) << endl;
+    //     mask = (1 << i)
+    //     if(N <= mask) {
+    //         cout << mask << endl;
     //         break;
     //     }
     // }
@@ -71,5 +72,10 @@ int main() {
     // }
 
     // cout << count << endl;
+
+    //Task 6
+
+    
+
 
 }
