@@ -95,4 +95,31 @@ int main() {
     }
     std::cout << next << std::endl;
     */
+
+   //Task 7
+
+   int num = 0, newNum = 0;
+   std::cin >> num;
+
+   for (int i = 1; i <= sizeof(int)*8; i++)
+   {
+
+       for(int j = 0; j < sizeof(int)*8; j++) {
+           if(num & 1) {
+               newNum = (newNum + 1) << 1;
+           } else {
+               newNum = newNum << 1;
+           }
+       }
+
+       std::cout << newNum % 2;
+       newNum /= 2;
+
+       if(i % 8 == 0)
+        std::cout << "'";
+
+   }
+       std::cout << std::endl;
+
+   
 }
