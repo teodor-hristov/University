@@ -5,7 +5,7 @@ using std::cout;
 using std::endl;
 
 int main() {
-    //Task 1
+    //Task 1 ========
 
     // int a, b;
 
@@ -16,7 +16,7 @@ int main() {
     // cout << (a << b) << endl;
     // cout << (a >> b) << endl;
 
-    //Task 2
+    //Task 2 ========
 
     // int N;
 
@@ -28,7 +28,7 @@ int main() {
     //     cout << "0" << endl;
     // }
 
-    //Task 3
+    //Task 3 ========
 
     // int N, M;
 
@@ -37,14 +37,14 @@ int main() {
     // //5 3
     // //101
     
-    //Task 3a
+    //Task 3a ========
 
     // int N, M;
     // cin >> N >> M;
 
     // cout << !!(N & (1 << (32 - M))) << endl;
 
-    //Task 4
+    //Task 4 ========
 
     // int N;
     // int mask;
@@ -59,7 +59,7 @@ int main() {
     //     }
     // }
 
-    //Task 5
+    //Task 5 ========
 
     // int N, count = 0;
 
@@ -73,7 +73,7 @@ int main() {
 
     // cout << count << endl;
 
-    //Task 6a
+    //Task 6a ========
 
     // int n;
     // bool status = 0;
@@ -93,14 +93,14 @@ int main() {
 
     // cout << n << endl;
 
-    //Task 6b
+    //Task 6b ========
 
     // int n;
 
     // cin >> n;
     // cout << ~n + 1 << endl; 
 
-    //Task 7 
+    //Task 7 ========
 
     // int n;
 
@@ -109,7 +109,7 @@ int main() {
     // // 111..010
     // cout << n ^    
 
-    //Task 8
+    //Task 8 ========
     // int n;
 
     // cin >> n;
