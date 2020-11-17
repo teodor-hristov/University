@@ -5,11 +5,12 @@ using std::cin;
 using std::endl;
 using std::max;
 using std::min;
-using std::abs;
+
+unsigned int absolute(int a);
 
 int main()
 {
-	double aX, aY, bX, bY, cX, cY,
+	float aX, aY, bX, bY, cX, cY,
 			a1X, a1Y, b1X, b1Y, c1X, c1Y,
 			firstHeight, firstWidth, secondHeight, secondWidth,
 			intersectionWidth, intersectionHeight, intersectionArea;
@@ -41,3 +42,11 @@ int main()
 	return 0;
 }
 
+unsigned int absolute(int a) {
+	if (a < 0) {
+		return a * (-1);
+	}
+	else {
+		return a;
+	}
+}

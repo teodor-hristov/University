@@ -7,7 +7,7 @@ using std::endl;
 unsigned int dateToDays(unsigned int dateSec, unsigned int dateMinute, unsigned int dateHour,
 	unsigned int dateDay, unsigned int dateMonth, unsigned int dateYear);
 unsigned int dateToSeconds(unsigned int dateSec, unsigned int dateMinute, unsigned int dateHour);
-bool isDataValid(unsigned int dateSec, unsigned int dateMinute, unsigned int dateHour,
+bool isDataValid(unsigned int dateSec, unsigned int dateMinute, unsigned dateHour,
 	unsigned int dateDay, unsigned int dateMonth, unsigned int dateYear);
 bool isLeapYear(int year);
 unsigned int absolute(int a);
@@ -21,8 +21,8 @@ int main()
 	int firstDateSeconds, secondDateSeconds;
 
 	//parsing format dd.mm.yyyy HH:MM:SS
-	(void)scanf_s("%d.%d.%d %d:%d:%d", &firstDay, &firstMonth, &firstYear, &firstHour, &firstMinute, &firstSecond);
-	(void)scanf_s("%d.%d.%d %d:%d:%d", &secondDay, &secondMonth, &secondYear, &secondHour, &secondMinute, &secondSecond);
+	(void)scanf("%d.%d.%d %d:%d:%d", &firstDay, &firstMonth, &firstYear, &firstHour, &firstMinute, &firstSecond);
+	(void)scanf("%d.%d.%d %d:%d:%d", &secondDay, &secondMonth, &secondYear, &secondHour, &secondMinute, &secondSecond);
 
 	if (!isDataValid(firstSecond, firstMinute, firstHour, firstDay, firstMonth, firstYear) ||
 		!isDataValid(secondSecond, secondMinute, secondHour, secondDay, secondMonth, secondYear)) {
@@ -146,7 +146,7 @@ unsigned int dateToSeconds(unsigned int dateSec, unsigned int dateMinute, unsign
 	return result;
 }
 
-bool isDataValid(unsigned int dateSec, unsigned int dateMinute, unsigned int dateHour,
+bool isDataValid(unsigned int dateSec, unsigned int dateMinute, unsigned dateHour,
 	unsigned int dateDay, unsigned int dateMonth, unsigned int dateYear) {
 	bool status = true;
 
@@ -184,6 +184,9 @@ bool isDataValid(unsigned int dateSec, unsigned int dateMinute, unsigned int dat
 		}
 	}
 
+	if(dateHour > 23 || dateHour < 0){
+		status = false;
+	}
 
 	return status;
 }
