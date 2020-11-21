@@ -224,10 +224,68 @@ int wordCountInMatrix(const char* word ,const int n) {
     return count;
 }
 
+bool isDash(char c) {
+    return c == '/';
+}
+bool isPoint(char c) {
+    return c == '.';
+}
+bool isDigit(char c) {
+    if(!(c >= '0' && c <= '9')) {
+        return false;
+    }
+}
+
+bool isValidRealNumber(char* str) {
+    int digitCount = 0, dashCount = 0, pointCount = 0;
+    int len = length(str);
+
+    if(str[0] == '.' || str[len - 1] == '.') {
+        return false;
+    }
+    if(len > 2 && (str[0] == '0' && str[1] != '.')) {
+        return false;
+    }
+    if(len == 2 && (str[0] == '-' && str[1] == '0')) {
+        return false;
+    }
+
+    for(int i = 0; i < str[i] != '\0'; i++) {
+        if(dashCount > 1 || pointCount > 1) {
+            return false;
+        }
+        if(isDash(str[i])) {
+            if(i != 0) {
+                return false;
+            }
+            dashCount++;
+        } else if(isPoint(str[i])) {
+            pointCount++;
+        } else if(isDigit(str[i])) {
+            digitCount++;
+        } else {
+            return false;
+        }
+
+
+
+
+    }
+
+    if(!digitCount) {
+        return false;
+    }
+    if(pointCount && str[len - 2] == '0') {
+        return false;
+    }
+     
+    return true;
+}
+
 const int MAX_LENGTH = 35;
 int main() {
 
-    char str[50] = "A1D2";
+    char str[50] = ".123123";
     int n = 5;
 
     cout << "Task 1: " << numberOfCharA(str) << endl;
@@ -247,8 +305,11 @@ int main() {
     cout << "Task 10: " << isValidNaturalNumberIn16(str) << endl;
     cout << "Task real 8: " << convertFrom16To10(str) << endl;
 
-    char word[4] = "ala";
-    cout << "Task 10: \n" << wordCountInMatrix(word ,n) << endl;
+    // char word[4] = "ala";
+    // cout << "Task 10: \n" << wordCountInMatrix(word ,n) << endl;
+
+    cout << "Task 11: " << isValidRealNumber(str) << endl;
+
 
 
 }
