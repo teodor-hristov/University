@@ -79,34 +79,37 @@ unsigned length(char* str) {
 }
 
 //asdasd\0
-// void reverse(char* str) {
+void reverse(char* str) {
 
-//     unsigned len = length(str);    
-//     char* tempStr = str;
+    const unsigned len = length(str);    
+    char tempFirst = 0;
 
-//     for(int i = 0; i < len; i++) {
-//         str[i] = tempStr[len - i - 1];
-//     }
-
-// }
+    for(int i = 0; i < len/2; i++) {
+        tempFirst = str[i];
+        str[i] = str[len - 1 - i];
+        str[len - 1 - i] = tempFirst;
+    }
+}
 
 const int MAX_LENGTH = 35;
 int main() {
 
-    char str[50] = "ASaD";
+    char str[50] = "ASahD";
     int n = 9;
 
-    cout << numberOfCharA(str) << endl;
-    cout << numberOfDigits(str) << endl;
-    cout << digitToChar(n) << endl;
-    cout << lastDigitToChar(n) << endl;
-    cout << firstDigitToChar(n) << endl;
-    cout << areAllUpcase(str) << endl;
+    cout << "Task 1: " << numberOfCharA(str) << endl;
+    cout << "Task 2: " << numberOfDigits(str) << endl;
+    cout << "Task 3: " << digitToChar(n) << endl;
+    cout << "Task 4: " << lastDigitToChar(n) << endl;
+    cout << "Task 5: " << firstDigitToChar(n) << endl;
+    cout << "Task 6: " << areAllUpcase(str) << endl;
 
     //unsigned num;
     // cin >> num;
     // readAndPrintAscii(num);
     
     reverse(str);
-    cout << str << endl;
+    cout << "Reverse: " << str << endl;
+    cout << "Task 9: " << areAllUpcase(str) << endl;
+
 }
