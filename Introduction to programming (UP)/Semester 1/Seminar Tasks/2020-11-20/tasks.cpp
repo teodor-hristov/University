@@ -127,10 +127,59 @@ bool isValidNaturalNumberIn16(const char* str) {
     return true;
 }
 
+int parseHexDigit(char c) {
+    char chars[17] = "0123456789ABCDEF";
+
+        for(int i = 0; i < 17; i++) {
+                if(c == chars[i]) {
+                    return i;
+                }
+        }
+}
+
+int power(int a, int b) {
+    int result = 1;
+    for(int i = 0; i < b; i++) {
+        result *= a;
+    }
+
+    return result;
+}
+
+bool isValidHex(const char* str) {
+    int len = length(str);
+    for(int i = 0; i < len; i++) {
+        if((str[i] >= 'A' && str[i] <= 'F') || (str[i] >= '0' && str[i] <= '9')) {
+
+        } else {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+//14A
+//
+int convertFrom16To10(const char* str) {
+    int len = length(str);
+    int result = 0;
+
+    if(!isValidHex(str)){
+        return -1;
+    }
+
+    for(int i = 0; i < len; i++) {
+        result += parseHexDigit(str[i]) * power(16, i);
+    }
+
+    return result;
+}
+
 const int MAX_LENGTH = 35;
 int main() {
 
-    char str[50] = "1a23";
+    char str[50] = "A1D2";
     int n = 9;
 
     cout << "Task 1: " << numberOfCharA(str) << endl;
@@ -148,5 +197,7 @@ int main() {
     cout << "Reverse: " << str << endl;
     cout << "Task 9: " << isValidNaturalNumber(str) << endl;
     cout << "Task 10: " << isValidNaturalNumberIn16(str) << endl;
+    cout << "Task real 8: " << convertFrom16To10(str) << endl;
+
 
 }
