@@ -70,7 +70,7 @@ void readAndPrintAscii(const unsigned n){
     printAscii(str);
 }
 
-unsigned length(char* str) {
+unsigned length(const char* str) {
     unsigned result;
 
     for(result = 0; str[result] != '\0'; result++);
@@ -91,10 +91,46 @@ void reverse(char* str) {
     }
 }
 
+bool isValidNaturalNumber(const char* str) {
+    bool status = true;
+    int len = length(str);
+    
+    if(str[0] == '0'){
+        status = false;
+        return status;
+    }
+    for(int i = 0; i < len; i++) {
+        if(str[i] < '1' || str[i] > '9') {
+            status = false;
+            return status; 
+        }
+    }
+    
+    return status;
+}
+
+bool isValidNaturalNumberIn16(const char* str) {
+    int len = length(str);
+
+    if(str[0] == '0') {
+        return false;
+    }
+
+    for(int i = 0; i < len; i++) {
+        if((str[i] >= '0' && str[i] <= '9') && (str[i] >= 'A' && str[i] <= 'Z')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 const int MAX_LENGTH = 35;
 int main() {
 
-    char str[50] = "ASahD";
+    char str[50] = "1a23";
     int n = 9;
 
     cout << "Task 1: " << numberOfCharA(str) << endl;
@@ -110,5 +146,7 @@ int main() {
     
     reverse(str);
     cout << "Reverse: " << str << endl;
-    cout << "Task 9: " << areAllUpcase(str) << endl;
+    cout << "Task 9: " << isValidNaturalNumber(str) << endl;
+    cout << "Task 10: " << isValidNaturalNumberIn16(str) << endl;
 
+}
