@@ -176,11 +176,40 @@ int convertFrom16To10(const char* str) {
     return result;
 }
 
+int wordCountInMatrix(const char* word ,const int n) {
+    int count = 0;
+    int charStatusCount = 0;
+    char wordMatrix[n][8];
+    int wordLen = length(word);
+
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < 8; j++) {
+            cin >> wordMatrix[i][j];
+        }
+    }
+
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < 8; j++) {
+            if(wordMatrix[i][j] == word[charStatusCount]) {
+                charStatusCount++;
+            } else {
+                charStatusCount = 0;
+            }
+            if(charStatusCount == wordLen) {
+                count++;
+                charStatusCount = 0;
+            }
+        }
+    }
+
+    return count;
+}
+
 const int MAX_LENGTH = 35;
 int main() {
 
     char str[50] = "A1D2";
-    int n = 9;
+    int n = 5;
 
     cout << "Task 1: " << numberOfCharA(str) << endl;
     cout << "Task 2: " << numberOfDigits(str) << endl;
@@ -198,6 +227,9 @@ int main() {
     cout << "Task 9: " << isValidNaturalNumber(str) << endl;
     cout << "Task 10: " << isValidNaturalNumberIn16(str) << endl;
     cout << "Task real 8: " << convertFrom16To10(str) << endl;
+
+    char word[5] = "c++";
+    cout << "Task 10: \n" << wordCountInMatrix(word ,n) << endl;
 
 
 }
