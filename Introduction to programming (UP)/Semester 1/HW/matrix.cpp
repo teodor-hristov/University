@@ -2,17 +2,11 @@
 
 using namespace std;
 
-int main() {
-    int matrix[6][4] = {{0, 1, 2, 3},
-                        {4, 5, 6, 7},
-                        {0, 4, 7, 3},
-                        {7, 6, 2, 3},
-                        {5, 1, 2, 6},
-                        {0, 1, 5, 4}};
+void snakePatternPrintMatrix(int matrix[][4], int col, int row) {
     int uL[2] = {0,0};
-    int uR[2] = {0,3};
-    int dL[2] = {5,0};
-    int dR[2] = {5,3};
+    int uR[2] = {0,col};
+    int dL[2] = {row,0};
+    int dR[2] = {row,col};
     for(int count = 0; count < 2; count++) {
 
         for(int y = uL[1]; y <= uR[1]; y++) {
@@ -54,5 +48,15 @@ int main() {
     }
 
     cout << endl;
+}
 
+int main() {
+    int matrix[6][4] = {{0, 1, 2, 3},
+                        {4, 5, 6, 7},
+                        {0, 4, 7, 3},
+                        {7, 6, 2, 3},
+                        {5, 1, 2, 6},
+                        {0, 1, 5, 4}};
+    
+    snakePatternPrintMatrix(matrix, 6, 4);
 }
