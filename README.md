@@ -1,6 +1,6 @@
 # University
 
-This repository is containing resourses i've been used from 1-st year in university. It contains **Math** and **Programming** books and courses. 
+This repository is containing resourses i've been using from 1-st year in university. It contains **Math** and **Programming** books and courses. 
 
 
 # Books
