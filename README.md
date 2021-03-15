@@ -11,6 +11,7 @@ This repository is containing resourses i've been using from 1-st year in univer
 <li>Abstract Algebra, 3rd Edition </li>
 <li>Contemporary Abstract Algebra</li>
 <li>Discrete Mathematics and Its Applications - Kenneth Rosen (2012)</li>
+<li>Lipschutz S., Lipson M. - Schaum's outline of discrete mathematics</li>
 <li>Linear Algebra Done Right</li>
 <li>Кудрявцев-Сборник задач по математическому анализу т 1</li>
 <li>Кудрявцев-Сборник задач по математическому анализу т 2</li>
