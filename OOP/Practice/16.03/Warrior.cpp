@@ -31,11 +31,15 @@ Warrior::Warrior(char *name, int strength, int health, Weapon &weapon) {
 }
 
 void Warrior::attack(Warrior &victim) {
-    int tempDurability = this->getWeapon().getDurability();
+    Weapon temp = this->getWeapon();
+
     std::cout << victim.getName() << " took " << this->getWeapon().getStrength() + this->getStrength() << " damage from " << this->getName()
     << "\n current health: " << this->getName() << " : " << victim.getName() << " " << this->getHealth() << " -> " << victim.getHealth() << "\n";
     victim.setHealth(victim.getHealth() - this->getStrength() + this->getWeapon().getStrength());
-    this->getWeapon().setDurability( tempDurability - 1);
+    temp.setDurability(this->getWeapon().getDurability() - 1);
+    this->setWeapon(temp);
+
+
 }
 
 Warrior::~Warrior() {
