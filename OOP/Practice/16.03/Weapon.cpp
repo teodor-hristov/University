@@ -3,7 +3,11 @@
 //
 
 #include "Weapon.h"
-Weapon::Weapon() {this->durability = 0;}
+Weapon::Weapon() {
+    this->setStrength(0);
+    this->setName("");
+    this->durability = 0;
+}
 Weapon::Weapon(char* name, int strength, int durability) {
     this->setName(name);
     this->setStrength(strength);
