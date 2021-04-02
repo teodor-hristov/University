@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/tedo3637/CLionProjects/Hw1/MyString/MyString.hpp
+iostream
+-
+
+/home/tedo3637/CLionProjects/Hw1/main.cpp
+iostream
+-
+MyString/MyString.hpp
+/home/tedo3637/CLionProjects/Hw1/MyString/MyString.hpp
+

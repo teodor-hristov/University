@@ -1,0 +1,4 @@
+/home/tedo3637/CLionProjects/Hw1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/tedo3637/CLionProjects/Hw1/cmake-build-debug/CMakeFiles/StringTest.dir
+/home/tedo3637/CLionProjects/Hw1/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/tedo3637/CLionProjects/Hw1/cmake-build-debug/CMakeFiles/Hw1.dir

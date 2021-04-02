@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/StringTest.dir/MyString/MyStringTests.cpp.o CMakeFiles/StringTest.dir/catch_amalgamated.cpp.o CMakeFiles/StringTest.dir/MyString/MyString.cpp.o  -o StringTest 
