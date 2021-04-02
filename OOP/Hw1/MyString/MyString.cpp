@@ -108,7 +108,17 @@ void MyString::push_back(char c) {
 }
 
 void MyString::pop_back() {
+    assert(this->size() > 0); //thre is nothing to remove if string is empty
+    char *tempStr;
+    tempStr = makeSpace(*this);
+    this->length -= 1;
+    this->lastIndex -= 1;
 
+    strcpy(tempStr, this->str);
+    tempStr[this->lastIndex + 1] = '\0'; // need to add terminating zero
+
+    delete[] this->str;
+    this->str = tempStr;
 }
 
 MyString &MyString::operator+=(char c) {
