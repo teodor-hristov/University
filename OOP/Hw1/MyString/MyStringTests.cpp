@@ -50,9 +50,15 @@ TEST_CASE("Push back"){
     MyString mystr = MyString("");
     mystr.push_back('c');
     REQUIRE(strcmp(&mystr.back(), "c") == 0);
-    mystr.push_back('\0');
+    mystr.push_back('0');
     mystr.push_back('%');
     mystr.push_back('\0');
     REQUIRE(strcmp(&mystr.back(), "") == 0);
+}
 
+TEST_CASE("Pop back"){
+    MyString mystr = MyString("1.9TDI");
+    mystr.pop_back();
+    mystr.pop_back();
+    REQUIRE(strcmp(&mystr.back(), "T") == 0);
 }
