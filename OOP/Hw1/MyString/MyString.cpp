@@ -53,7 +53,7 @@ char &MyString::operator[](std::size_t pos) {
 }
 
 const char &MyString::operator[](std::size_t pos) const {
-    assert(pos >= this->length || pos < 0);
+    assert(pos < this->size() && pos >= 0);
     return this->str[pos];
 }
 
@@ -87,7 +87,7 @@ void MyString::clear() {
 }
 
 char *makeSpace(MyString &str) {
-    char *newString = new char[str.size() + 1]; //size +1 (for new char)
+    char *newString = new char[str.size() + 2]; //size +1 (for new char) and 1 for \0
     assert(newString);
 
     return newString;
@@ -108,7 +108,7 @@ void MyString::push_back(char c) {
 }
 
 void MyString::pop_back() {
-    assert(this->size() > 0); //thre is nothing to remove if string is empty
+    assert(this->size() > 0); //there is nothing to remove if string is empty
     char *tempStr;
     tempStr = makeSpace(*this);
     this->length -= 1;
@@ -121,30 +121,58 @@ void MyString::pop_back() {
     this->str = tempStr;
 }
 
-MyString &MyString::operator+=(char c) {
-    return *this;
-}
-
-MyString &MyString::operator+=(const MyString &rhs) {
-    return *this;
-}
-
 MyString MyString::operator+(char c) const {
-    return MyString();
+    MyString newString = *this;
+    newString.push_back(c);
+
+    return newString;
+}
+
+MyString &MyString::operator+=(char c) {
+    MyString resultStr = *this + c;
+    return resultStr;
 }
 
 MyString MyString::operator+(const MyString &rhs) const {
-    return MyString();
+    MyString result = *this;
+    for (int i = 0; i < rhs.size(); ++i) {
+        result.push_back(rhs[i]);
+    }
+
+    return result;
+}
+
+MyString &MyString::operator+=(const MyString &rhs) {
+    char* catString = new char[this->size() + rhs.size() + 1];
+
+    strcpy(catString, this->str);
+    strcat(catString, rhs.str);
+
+    delete[] this->str;
+
+    this->str = catString;
+
+    this->length += rhs.length;
+    this->lastIndex = this->length - 1;
+
+    return *this;
 }
 
 const char *MyString::c_str() const {
-    return nullptr;
+    char* constString = new char[this->size() + 1];
+    strcpy(constString,this->str);
+
+    return constString;
 }
 
 bool MyString::operator==(const MyString &rhs) const {
-    return false;
+    bool status = true;
+
+    status = (this->size() == rhs.size()) && (strcmp(this->str, rhs.str) == 0);
+
+    return status;
 }
 
 bool MyString::operator<(const MyString &rhs) const {
-    return false;
+    return this->size() < rhs.size();
 }
