@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/Hw1.dir/main.cpp.o CMakeFiles/Hw1.dir/MyString/MyString.cpp.o  -o Hw1 
