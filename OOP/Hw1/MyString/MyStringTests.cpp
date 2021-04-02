@@ -62,3 +62,52 @@ TEST_CASE("Pop back"){
     mystr.pop_back();
     REQUIRE(strcmp(&mystr.back(), "T") == 0);
 }
+
+TEST_CASE("Operator +"){
+    MyString mystr = MyString("1.9TDI");
+    MyString secondStr = mystr + '1';
+    REQUIRE(strcmp(&secondStr.back(), "1") == 0);
+}
+
+TEST_CASE("Operator =="){
+    MyString firstString = MyString("1.9TDI");
+    MyString secString = MyString("1.9TDI");
+
+    REQUIRE(firstString == secString);
+}
+
+TEST_CASE("Operator == not equal test"){
+    MyString firstString = MyString("1.9TDI");
+    MyString secString = MyString("1.8TDI");
+
+    REQUIRE((firstString == secString) == false);
+}
+
+TEST_CASE("Operator + (MyString + MyString)"){
+    MyString mystr = MyString("1.9TDI");
+    MyString secondStr = MyString(" Greatest VW motor");
+    MyString comparingString = MyString("1.9TDI Greatest VW motor");
+
+    REQUIRE(comparingString == (mystr + secondStr));
+}
+
+TEST_CASE("Operator += (MyString += MyString)"){
+    MyString mystr = MyString("^1.9TDI");
+    MyString secondStr = MyString(" Greate&t VW motor");
+    MyString comparingString = MyString("^1.9TDI Greate&t VW motor");
+
+    mystr += secondStr;
+
+    REQUIRE(mystr == comparingString);
+}
+
+TEST_CASE("Operator += (MyString += MyString) test for error"){
+    MyString mystr = MyString("^1.9TDI");
+    MyString secondStr = MyString(" Greate&t VW motor");
+    MyString comparingString = MyString("^2.0TDI Greate&t VW motor");
+
+    mystr += secondStr;
+
+    REQUIRE((mystr == comparingString) == false);
+}
+
