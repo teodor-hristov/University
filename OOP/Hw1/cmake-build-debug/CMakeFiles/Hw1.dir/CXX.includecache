@@ -6,6 +6,16 @@
 
 #IncludeRegexTransform: 
 
+/home/tedo3637/CLionProjects/Hw1/MyString/MyString.cpp
+MyString.hpp
+/home/tedo3637/CLionProjects/Hw1/MyString/MyString.hpp
+stdexcept
+-
+cstring
+-
+cassert
+-
+
 /home/tedo3637/CLionProjects/Hw1/MyString/MyString.hpp
 iostream
 -

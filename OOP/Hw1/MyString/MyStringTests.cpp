@@ -30,3 +30,29 @@ TEST_CASE("MyString [] operator"){
         REQUIRE(str[i] == primaryString[i]);
     }
 }
+
+TEST_CASE("Get last element (.back)"){
+    MyString mystr = MyString("Quick brown fo#");
+    REQUIRE(strcmp(&mystr.back(),"#") == 0);
+}
+
+TEST_CASE("Check if string is empty when it is not"){
+    MyString mystr = MyString("Quick brown fo#");
+    REQUIRE(!mystr.empty());
+}
+
+TEST_CASE("Check if string is empty when it is empty"){
+    MyString mystr = MyString("");
+    REQUIRE(mystr.empty());
+}
+
+TEST_CASE("Push back"){
+    MyString mystr = MyString("");
+    mystr.push_back('c');
+    REQUIRE(strcmp(&mystr.back(), "c") == 0);
+    mystr.push_back('\0');
+    mystr.push_back('%');
+    mystr.push_back('\0');
+    REQUIRE(strcmp(&mystr.back(), "") == 0);
+
+}

@@ -47,7 +47,8 @@ char &MyString::at(std::size_t pos) {
 }
 
 char &MyString::operator[](std::size_t pos) {
-    assert(pos >= this->length || pos < 0);
+    assert(pos < this->size() && pos >= 0);
+
     return this->at(pos);
 }
 
@@ -57,7 +58,7 @@ const char &MyString::operator[](std::size_t pos) const {
 }
 
 char &MyString::front() {
-    assert(this->length == 0);
+    assert(this->length > 0);
     return this->str[0];
 }
 
@@ -67,13 +68,13 @@ const char &MyString::front() const {
 }
 
 const char &MyString::back() const {
-    assert(this->length == 0);
+    assert(this->length > 0);
     return this->str[this->lastIndex];
 }
 
 
 bool MyString::empty() const {
-    return this->length;
+    return !this->length;
 }
 
 std::size_t MyString::size() const {
@@ -82,7 +83,7 @@ std::size_t MyString::size() const {
 
 void MyString::clear() {
     this->lastIndex = 0;
-    memset(this->str, 0, this->length);
+    memset(this->str, '\0', this->length);
 }
 
 char *makeSpace(MyString &str) {
@@ -93,11 +94,17 @@ char *makeSpace(MyString &str) {
 }
 
 void MyString::push_back(char c) {
-    if (this->lastIndex + 1 >= this->size()) {
-        this->str = makeSpace(*this);
-        this->length += 1;
-        this->lastIndex += 1;
-    }
+    char *tempStr;
+    tempStr = makeSpace(*this);
+    this->length += 1;
+    this->lastIndex += 1;
+
+    strcpy(tempStr, this->str);
+    tempStr[this->lastIndex] = c; // set here new char
+    tempStr[this->lastIndex + 1] = '\0'; // need to add terminating zero
+
+    delete[] this->str;
+    this->str = tempStr;
 }
 
 void MyString::pop_back() {
