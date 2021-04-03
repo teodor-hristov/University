@@ -12,7 +12,9 @@ MyString::MyString() {
 }
 
 MyString::~MyString() {
-    delete[] str;
+    if(!str){
+        delete[] str;
+    }
     this->length = 0;
     this->lastIndex = 0;
 }
