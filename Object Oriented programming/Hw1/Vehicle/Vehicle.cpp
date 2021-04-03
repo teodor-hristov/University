@@ -1,8 +1,10 @@
+#include <cassert>
 #include "Vehicle.hpp"
 
 Vehicle::Vehicle(const char *registration, const char *description, std::size_t space) {
+    assert(space > 0); //remove negative value chance
     MyString regN = MyString(registration);
-    MyString dsc = MyString(registration);
+    MyString dsc = MyString(description);
     this->regNumber = regN;
     this->desc = dsc;
     this->parkingSize = space;
