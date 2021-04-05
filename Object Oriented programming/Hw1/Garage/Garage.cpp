@@ -24,7 +24,7 @@ Garage::Garage(const Garage &garage) {
 
 Garage::~Garage() {
     if(vhcls){
-        free(this->vhcls);
+        delete[] this->vhcls;
     }
 }
 
@@ -35,7 +35,7 @@ Garage &Garage::operator=(Garage &garage) {
     this->vhcls = new Vehicle*[garage.size()];
     assert(this->vhcls != nullptr);
 
-    memcpy(this->vhcls, garage.vhcls, garage.size());
+    this->vhcls = garage.vhcls;
 
     this->spots = garage.spots;
     this->lastIndex = garage.lastIndex;
