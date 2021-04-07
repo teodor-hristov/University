@@ -32,14 +32,16 @@ Garage &Garage::operator=(Garage &garage) {
     if(this->vhcls){
         delete[] this->vhcls;
     }
-    this->vhcls = new Vehicle*[garage.size()];
-    assert(this->vhcls != nullptr);
+    if(this != &garage){
+        this->vhcls = new Vehicle*[garage.size()];
+        assert(this->vhcls != nullptr);
 
-    this->vhcls = garage.vhcls;
+        this->vhcls = garage.vhcls;
 
-    this->spots = garage.spots;
-    this->lastIndex = garage.lastIndex;
-    this->usedSpots = garage.usedSpots;
+        this->spots = garage.spots;
+        this->lastIndex = garage.lastIndex;
+        this->usedSpots = garage.usedSpots;
+    }
 }
 
 void Garage::insert(Vehicle &v) {
