@@ -61,7 +61,7 @@ void Garage::insert(Vehicle &v) {
 
 }
 
-int findVehicle(const Garage *garage, const char* vhcl) {
+int findVehicle(const Garage *garage, const char *vhcl) {
     for (int i = 0; i < garage->size(); ++i) {
         if (strcmp(garage->at(i).registration(), vhcl) == 0) {
             return i;
@@ -72,9 +72,12 @@ int findVehicle(const Garage *garage, const char* vhcl) {
 }
 
 void Garage::erase(const char *registration) {
+    if(this->lastIndex == 0) {
+        return;
+    }
     int vhclIndex = findVehicle(this, registration);
-
-    if(vhclIndex >= 0){ //here we don't want to delete the car from the memory, we just need to remove it from the array a.k.a. garage.vhcls
+    //here we don't want to delete the car from the memory, we just need to remove it from the array a.k.a. garage.vhcls
+    if (vhclIndex >= 0) {
         for (int i = vhclIndex; i < this->lastIndex; ++i) {
             this->vhcls[i] = this->vhcls[i + 1];
         }
