@@ -58,6 +58,9 @@ TEST_CASE("Assignment operator with normal values"){
     for (int i = 0; i < 2; ++i) {
         REQUIRE(areCarsEqual(garage2[i], garage1[i]));
     }
+
+    delete car1;
+    delete car2;
 }
 
 TEST_CASE("Assignment operator with corrupted values"){
@@ -71,4 +74,24 @@ TEST_CASE("Assignment operator with corrupted values"){
 
     REQUIRE(garage1.find(""));
     REQUIRE(garage1.find("Quick\\"));
+
+    delete car1;
+    delete car2;
+}
+
+TEST_CASE("Erase function") {
+    Garage garage = Garage(10);
+    Vehicle* vhcl = new Vehicle("asdsad", "asdsad", 2);
+    Vehicle* car = new Vehicle("car", "asdsad", 2);
+
+    garage.insert(*vhcl);
+    garage.insert(*car);
+
+    garage.erase(vhcl->registration());
+
+    REQUIRE(garage.find(car->registration()) != nullptr);
+    REQUIRE(garage.find(vhcl->registration()) == nullptr);
+
+    delete car;
+    delete vhcl;
 }
