@@ -55,8 +55,7 @@ TEST_CASE("Assignment operator with normal values"){
     garage2 = garage1;
 
     REQUIRE(garage1.size() == garage2.size());
-
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 2; ++i) {
         REQUIRE(areCarsEqual(garage2[i], garage1[i]));
     }
 }
