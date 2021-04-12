@@ -46,7 +46,7 @@ TEST_CASE("Assignment operator with normal values"){
     Garage garage1 = Garage(5);
     Garage garage2 = Garage(2);
 
-    Vehicle* car1 = new Vehicle("Quick", "brown", 2);
+    Vehicle* car1 = new Vehicle("Fast", "brown", 2);
     Vehicle* car2 = new Vehicle("Quick", "White", 1);
 
     garage1.insert(*car1);
@@ -58,4 +58,17 @@ TEST_CASE("Assignment operator with normal values"){
     for (int i = 0; i < 2; ++i) {
         REQUIRE(areCarsEqual(garage2[i], garage1[i]));
     }
+}
+
+TEST_CASE("Assignment operator with corrupted values"){
+    Garage garage1 = Garage(5);
+
+    Vehicle* car1 = new Vehicle("", "", 2);
+    Vehicle* car2 = new Vehicle("Quick\\", "White", 1);
+
+    garage1.insert(*car1);
+    garage1.insert(*car2);
+
+    REQUIRE(garage1.find(""));
+    REQUIRE(garage1.find("Quick\\"));
 }
