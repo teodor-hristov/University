@@ -36,7 +36,9 @@ Garage &Garage::operator=(Garage &garage) {
         this->vhcls = new Vehicle*[garage.size()];
         assert(this->vhcls != nullptr);
 
-        this->vhcls = garage.vhcls;
+        for (int i = 0; i < garage.lastIndex; ++i) {
+            this->vhcls[i] = garage.vhcls[i];
+        }
 
         this->spots = garage.spots;
         this->lastIndex = garage.lastIndex;
