@@ -61,8 +61,21 @@ void Garage::insert(Vehicle &v) {
 
 }
 
+int findVehicle(const Garage* garage, const Vehicle &vhcl){
+    for (int i = 0; i < garage->size(); ++i) {
+        if(garage->at(i) == vhcl){
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 void Garage::erase(const char *registration) {
 
+        this->vhcls[this->lastIndex] = nullptr;
+        this->lastIndex--;
+    }
 }
 
 bool Garage::empty() const {
@@ -80,8 +93,8 @@ void Garage::clear() {
 Vehicle *Garage::find(const char *registration) {
     // We need to count not the cars but the spots
 
-    for (size_t i = 0; i < lastIndex ;++i) {
-        if((*this->vhcls[i]).registration() == registration){
+    for (size_t i = 0; i < lastIndex; ++i) {
+        if (strcmp((*this->vhcls[i]).registration(), registration) == 0) {
             return this->vhcls[i];
         }
 
