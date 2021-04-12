@@ -12,5 +12,6 @@ public:
     const char* registration() const;
     const char* description() const;
     std::size_t space() const;
+    bool operator==(const Vehicle &vhcl) const;
 
 };
