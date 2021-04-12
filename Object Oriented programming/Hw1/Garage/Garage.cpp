@@ -5,7 +5,8 @@
 #include <cstring>
 
 Garage::Garage(std::size_t size) {
-    this->vhcls = new Vehicle*[size];
+    assert(size >= 0);
+    this->vhcls = new Vehicle *[size];
     assert(vhcls != nullptr);
     this->usedSpots = 0;
     this->lastIndex = 0;
@@ -14,7 +15,7 @@ Garage::Garage(std::size_t size) {
 }
 
 Garage::Garage(const Garage &garage) {
-    this->vhcls = new Vehicle*[garage.size()];
+    this->vhcls = new Vehicle *[garage.size()];
     this->spots = garage.spots;
     this->lastIndex = garage.lastIndex;
     this->usedSpots = garage.usedSpots;
@@ -23,17 +24,17 @@ Garage::Garage(const Garage &garage) {
 }
 
 Garage::~Garage() {
-    if(vhcls){
+    if (vhcls) {
         delete[] this->vhcls;
     }
 }
 
 Garage &Garage::operator=(Garage &garage) {
-    if(this->vhcls){
+    if (this->vhcls) {
         delete[] this->vhcls;
     }
-    if(this != &garage){
-        this->vhcls = new Vehicle*[garage.size()];
+    if (this != &garage) {
+        this->vhcls = new Vehicle *[garage.size()];
         assert(this->vhcls != nullptr);
 
         for (int i = 0; i < garage.lastIndex; ++i) {
@@ -47,10 +48,10 @@ Garage &Garage::operator=(Garage &garage) {
 }
 
 void Garage::insert(Vehicle &v) {
-    if(v.space() + this->usedSpots > this->size()) {
+    if (v.space() + this->usedSpots > this->size()) {
         throw std::out_of_range("");
     }
-    if(this->find(v.registration()) != nullptr) {
+    if (this->find(v.registration()) != nullptr) {
         throw std::invalid_argument("");
     }
 
@@ -77,12 +78,13 @@ void Garage::clear() {
 }
 
 Vehicle *Garage::find(const char *registration) {
-   // We need to count not the cars but the spots
+    // We need to count not the cars but the spots
 
     for (size_t i = 0; i < lastIndex ;++i) {
         if((*this->vhcls[i]).registration() == registration){
             return this->vhcls[i];
         }
+
     }
 
     return nullptr;
@@ -91,8 +93,8 @@ Vehicle *Garage::find(const char *registration) {
 const Vehicle *Garage::find(const char *registration) const {
     // We need to count not the cars but the spots
 
-    for (size_t i = 0; i < lastIndex ;++i) {
-        if((*this->vhcls[i]).registration() == registration){
+    for (size_t i = 0; i < lastIndex; ++i) {
+        if ((*this->vhcls[i]).registration() == registration) {
             return this->vhcls[i];
         }
     }
@@ -101,17 +103,17 @@ const Vehicle *Garage::find(const char *registration) const {
 }
 
 Vehicle &Garage::at(std::size_t pos) {
-    assert(pos >=0 && pos < this->size());
+    assert(pos >= 0 && pos < this->size());
     return *this->vhcls[pos];
 }
 
 const Vehicle &Garage::at(std::size_t pos) const {
-    assert(pos >=0 && pos < this->size());
+    assert(pos >= 0 && pos < this->size());
     return *this->vhcls[pos];
 }
 
 Vehicle &Garage::operator[](std::size_t pos) {
-    assert(pos >=0 && pos < this->size());
+    assert(pos >= 0 && pos < this->size());
     return *this->vhcls[pos];
 }
 
