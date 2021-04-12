@@ -72,6 +72,13 @@ int findVehicle(const Garage* garage, const Vehicle &vhcl){
 }
 
 void Garage::erase(const char *registration) {
+    Vehicle* temVhcl = find(registration);
+    int vhclIndex = findVehicle(this, *temVhcl);
+    if (temVhcl != nullptr) {
+        delete this->vhcls[vhclIndex];
+        for (int i = vhclIndex; i < this->lastIndex; ++i) {
+            this->vhcls[i] = this->vhcls[i+1];
+        }
 
         this->vhcls[this->lastIndex] = nullptr;
         this->lastIndex--;
