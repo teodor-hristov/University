@@ -80,6 +80,7 @@ bool MyString::empty() const {
 }
 
 std::size_t MyString::size() const {
+    assert(this != nullptr);
     return this->length;
 }
 
