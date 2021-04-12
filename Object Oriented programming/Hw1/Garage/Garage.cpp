@@ -93,7 +93,9 @@ std::size_t Garage::size() const {
 }
 
 void Garage::clear() {
-
+    for (int i = 0; i < lastIndex; ++i) {
+        this->vhcls[i] = nullptr;
+    }
 }
 
 Vehicle *Garage::find(const char *registration) {
