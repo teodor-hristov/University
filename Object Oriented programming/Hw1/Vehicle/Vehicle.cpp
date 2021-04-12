@@ -22,3 +22,7 @@ const char *Vehicle::description() const {
 std::size_t Vehicle::space() const {
     return this->parkingSize;
 }
+
+bool Vehicle::operator==(const Vehicle &vhcl) const{
+    return (this->registration() == vhcl.registration()) && (this->description() == vhcl.description()) && (this->parkingSize == vhcl.parkingSize);
+}
