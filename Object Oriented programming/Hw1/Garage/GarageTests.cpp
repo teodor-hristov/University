@@ -95,3 +95,14 @@ TEST_CASE("Erase function") {
     delete car;
     delete vhcl;
 }
+
+TEST_CASE("Erase not existing car") {
+    Garage garage = Garage(10);
+    Vehicle* car = new Vehicle("car", "asdsad", 2);
+
+    garage.erase(car->registration());
+
+    REQUIRE(garage.find(car->registration()) == nullptr);
+
+    delete car;
+}
