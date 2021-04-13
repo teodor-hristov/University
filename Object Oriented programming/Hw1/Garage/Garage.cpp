@@ -146,3 +146,6 @@ const Vehicle &Garage::operator[](std::size_t pos) const {
     return *this->vhcls[pos];
 }
 
+size_t Garage::getLastIndex() const {
+    return this->lastIndex;
+}

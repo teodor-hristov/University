@@ -22,4 +22,6 @@ public:
     void clear();
     Vehicle* find(const char* registration);
     const Vehicle* find(const char* registration) const;
+
+    size_t getLastIndex() const;
 };
