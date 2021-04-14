@@ -110,7 +110,6 @@ void Garage::clear() {
 
 Vehicle *Garage::find(const char *registration) {
     // We need to count not the cars but the spots
-
     for (size_t i = 0; i < lastIndex; ++i) {
         if (strcmp((*this->vhcls[i]).registration(), registration) == 0) {
             return this->vhcls[i];
