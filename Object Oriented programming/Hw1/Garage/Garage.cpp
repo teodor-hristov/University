@@ -48,10 +48,11 @@ Garage &Garage::operator=(Garage &garage) {
 }
 
 void Garage::insert(Vehicle &v) {
+    const char* registration = v.registration();
     if (v.space() + this->usedSpots > this->size()) {
         throw std::out_of_range("");
     }
-    if (this->find(v.registration()) != nullptr) {
+    if (this->find(registration) != nullptr) {
         throw std::invalid_argument("");
     }
 
@@ -59,13 +60,19 @@ void Garage::insert(Vehicle &v) {
     this->vhcls[lastIndex] = &v;
     this->lastIndex++;
 
+    delete registration;
 }
 
 int findVehicle(const Garage *garage, const char *vhcl) {
+    const char* registration;
     for (int i = 0; i < garage->size(); ++i) {
-        if (strcmp(garage->at(i).registration(), vhcl) == 0) {
+        registration = garage->at(i).registration();
+        if (strcmp(registration, vhcl) == 0) {
+            delete registration;
             return i;
         }
+
+        delete registration;
     }
 
     return -1;
