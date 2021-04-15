@@ -162,10 +162,7 @@ MyString &MyString::operator+=(const MyString &rhs) {
 }
 
 const char *MyString::c_str() const {
-    char* constString = new char[this->size() + 1];
-    strcpy(constString,this->str);
-
-    return constString;
+    return this->str;
 }
 
 bool MyString::operator==(const MyString &rhs) const {
