@@ -1,3 +1,4 @@
+#pragma once
 #include "../Vehicle/Vehicle.hpp"
 
 class Garage{
