@@ -11,7 +11,7 @@ public:
     Garage(std::size_t size); //max parking spots - size
     Garage(const Garage &garage);
     ~Garage();
-    Garage& operator=(Garage &garage);
+    Garage& operator=(const Garage &garage);
     void insert(Vehicle& v);
     void erase(const char* registration);
     Vehicle& at(std::size_t pos);

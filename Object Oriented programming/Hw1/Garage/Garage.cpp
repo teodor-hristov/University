@@ -27,7 +27,7 @@ Garage::~Garage() {
     delete[] this->vhcls;
 }
 
-Garage &Garage::operator=(Garage &garage) {
+Garage &Garage::operator=(const Garage &garage) {
     if (this->vhcls) {
         delete[] this->vhcls;
     }
@@ -43,6 +43,8 @@ Garage &Garage::operator=(Garage &garage) {
         this->lastIndex = garage.lastIndex;
         this->usedSpots = garage.usedSpots;
     }
+
+    return *this;
 }
 
 void Garage::insert(Vehicle &v) {
