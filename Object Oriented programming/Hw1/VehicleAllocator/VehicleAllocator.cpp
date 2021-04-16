@@ -12,10 +12,10 @@ VehicleAllocator::VehicleAllocator() {
 void VehicleAllocator::addVehicle(Vehicle &vhcl) {
     if (lastIndex + 1 == size) {
         resize();
-    } else {
-        container[lastIndex] =  &vhcl;
-        lastIndex++;
     }
+
+    container[lastIndex] = &vhcl;
+    lastIndex++;
 }
 
 void VehicleAllocator::resize() {
@@ -57,8 +57,10 @@ Vehicle *VehicleAllocator::createVehicle(Garage &garage) {
 
 VehicleAllocator::~VehicleAllocator() {
     for (int i = 0; i < lastIndex; ++i) {
-        delete container[i];
+        delete this->container[i];
     }
 
+    this->lastIndex = 0;
+    this->size = 0;
     delete[] container;
 }
