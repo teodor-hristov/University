@@ -47,10 +47,10 @@ Garage &Garage::operator=(Garage &garage) {
 
 void Garage::insert(Vehicle &v) {
     if (v.space() + this->usedSpots > this->size()) {
-        throw std::out_of_range("");
+        throw std::out_of_range("Not enough space for this vehicle.");
     }
     if (this->find(v.registration()) != nullptr) {
-        throw std::invalid_argument("");
+        throw std::invalid_argument("Invalid index.");
     }
 
     this->usedSpots += v.space();
@@ -73,6 +73,8 @@ void Garage::erase(const char *registration) {
         return;
     }
     int vhclIndex = findVehicle(this, registration);
+    this->usedSpots -= this->vhcls[vhclIndex]->space();
+
     //here we don't want to delete the car from the memory, we just need to remove it from the array a.k.a. garage.vhcls
     if (vhclIndex >= 0) {
         for (int i = vhclIndex; i < this->lastIndex; ++i) {
