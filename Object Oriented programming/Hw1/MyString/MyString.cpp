@@ -20,6 +20,9 @@ MyString::~MyString() {
 }
 
 MyString::MyString(const MyString &str1) {
+    if(!str){
+        delete[] str;
+    }
     this->str = new char[str1.length];
     strcpy(this->str, str1.str);
     this->length = str1.length;
