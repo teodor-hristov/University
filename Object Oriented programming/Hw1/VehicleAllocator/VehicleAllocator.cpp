@@ -3,6 +3,12 @@
 #include <cassert>
 #include <iostream>
 
+VehicleAllocator::VehicleAllocator() {
+    container = new Vehicle *[2];
+    size = 2;
+    lastIndex = 0;
+}
+
 void VehicleAllocator::addVehicle(Vehicle &vhcl) {
     if (lastIndex + 1 == size) {
         resize();
@@ -25,11 +31,6 @@ void VehicleAllocator::resize() {
     container = temp;
 }
 
-VehicleAllocator::VehicleAllocator() {
-    container = new Vehicle *[2];
-    size = 2;
-    lastIndex = 0;
-}
 
 Vehicle *VehicleAllocator::createVehicle(Garage &garage) {
     int spots;
@@ -55,7 +56,7 @@ Vehicle *VehicleAllocator::createVehicle(Garage &garage) {
 }
 
 VehicleAllocator::~VehicleAllocator() {
-    for (int i = 0; i < lastIndex+1; ++i) {
+    for (int i = 0; i < lastIndex; ++i) {
         delete container[i];
     }
 
