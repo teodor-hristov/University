@@ -176,6 +176,27 @@ bool MyString::operator==(const MyString &rhs) const {
     return status;
 }
 
-bool MyString::operator<(const MyString &rhs) const {
-    return this->size() < rhs.size();
+bool MyString::operator<(const MyString &rhs) const
+{
+    int count = std::min(this->length, rhs.size());
+    int i = 0;
+    for (i; i < count; i++)
+    {
+        if (this->str[i] < rhs.str[i])
+        {
+            return true;
+        }
+        else if (this->str[i] > rhs.str[i])
+        {
+            return false;
+        }
+        else
+        {
+            continue;
+        }
+    }
+    if (rhs[i] == '\0')
+        return false;
+    else
+        return true;
 }
