@@ -9,7 +9,8 @@ using namespace std;
 void printGarage(Garage &garage) {
 
     for (int i = 0; i < garage.getLastIndex(); ++i) {
-        cout << "Id: " << i <<"\nDesc: " << garage[i].description() << "\nRegistration: " << garage[i].registration() << "\nSize: "
+        cout << "Id: " << i << "\nDesc: " << garage[i].description() << "\nRegistration: " << garage[i].registration()
+             << "\nSize: "
              << garage[i].space() << endl;
     }
 }
@@ -19,7 +20,7 @@ void printMenu() {
 }
 
 void addCar(VehicleAllocator &vhclAlloc, Garage &garage) {
-    Vehicle* vhcl = vhclAlloc.createVehicle(garage);
+    Vehicle *vhcl = vhclAlloc.createVehicle(garage);
     garage.insert(*vhcl);
 }
 
@@ -30,8 +31,25 @@ void removeCar(Garage &garage) {
     printGarage(garage);
 
     cin >> index;
-    garage.erase(garage[index].registration());
+    if (index >= 0 && index <= garage.getLastIndex()) {
+        garage.erase(garage[index].registration());
+    }
 }
+
+/*
+ 10
+ 1
+ asd
+ asd
+ 2
+ 1
+ erw
+ rew
+ 4
+ 2
+ 0
+ 4
+ * */
 
 
 int main() {
@@ -47,7 +65,7 @@ int main() {
         cin >> option;
         switch (option) {
             case 1:
-                addCar(vhcls,garage);
+                addCar(vhcls, garage);
                 break;
             case 2:
                 removeCar(garage);
