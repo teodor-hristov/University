@@ -1,3 +1,4 @@
+
 # University
 
 This repository is containing resourses i've been using from 1-st year in university. It contains **Math** and **Programming** books and courses. 
@@ -26,3 +27,6 @@ This repository is containing resourses i've been using from 1-st year in univer
 </ul>
 </ul>
 
+# Hints
+* Catch2
+>```wget https://raw.githubusercontent.com/catchorg/Catch2/devel/extras/catch_amalgamated.hpp https://raw.githubusercontent.com/catchorg/Catch2/devel/extras/catch_amalgamated.cpp```
