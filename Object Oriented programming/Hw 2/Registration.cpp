@@ -1,3 +1,6 @@
+#ifndef HW2_REGISTRATION_H
+#define HW2_REGISTRATION_H
+
 #include <string>
 #include "Registration.h"
 
@@ -43,3 +46,5 @@ bool Registration::isNumberValid(const std::string &number) {
     }
 
 }
+
+#endif
