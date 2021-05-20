@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-
 class Vehicle;
 
 class Person{
@@ -15,13 +14,23 @@ private:
     std::vector<Vehicle*> vehicles;
 
 public:
-    explicit Person(const std::string& name);
+    explicit Person(const std::string& name, unsigned int id);
 
-    void addVehicle(Vehicle& vhcl);
+    void addVehicle(Vehicle* vhcl);
 
     const std::string &getName() const;
 
+    void removeVehicle(Vehicle* vehicle);
+
     const std::vector<Vehicle*> &getVehicles() const;
+
+    static bool idExits(unsigned int id, std::vector<Person*>* vect);
+    static Person* findById(unsigned int id, std::vector<Person*>* vect);
+
+    friend std::ostream& operator<<(std::ostream& out, Person& person);
+
+    void printCars();
+
 };
 
 #endif
