@@ -1,6 +1,3 @@
-#ifndef HW2_REGISTRATION_H
-#define HW2_REGISTRATION_H
-
 #include <string>
 #include <iostream>
 #include <vector>
@@ -20,7 +17,9 @@ void Registration::setRegistrationNumber(const std::string &registrationNumber) 
         throw std::invalid_argument("Not valid registration number!");
     }
 }
-
+Registration::Registration() {
+    this->registrationNumber = "";
+}
 Registration::Registration(const std::string &number) {
     setRegistrationNumber(number);
 }
@@ -49,7 +48,12 @@ bool Registration::isNumberValid(const std::string &number){
 }
 
 bool Registration::registrationExists(std::string& reg, std::vector<Registration*>* vect){
-    Registration registr = Registration(reg); // this is needed only for searching and for
+    Registration registr;
+    try {
+        registr = Registration(reg); // this is needed only for searching
+    } catch(...){
+        return false;
+    }
     return registrationExists(registr, vect);
 }
 
@@ -69,5 +73,3 @@ bool Registration::operator==(const Registration &rhs) const {
 bool Registration::operator!=(const Registration &rhs) const {
     return !(rhs == *this);
 }
-
-#endif

@@ -23,7 +23,7 @@ public:
 
     void setOwner(Person *owner);
 
-    static Vehicle *findById(std::string &id, std::vector<Vehicle *>* vect);
+    static Vehicle *findById(const std::string &id, std::vector<Vehicle *>* vect);
 
     friend std::ostream &operator<<(std::ostream &out, const Vehicle &vhcl);
 

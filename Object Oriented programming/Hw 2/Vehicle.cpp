@@ -22,7 +22,7 @@ void Vehicle::setOwner(Person *value) {
     this->owner = value;
 }
 
-Vehicle *Vehicle::findById(std::string &id, std::vector<Vehicle *>* vect) {
+Vehicle *Vehicle::findById(const std::string &id, std::vector<Vehicle *>* vect) {
     std::size_t len = vect->size();
     for (int i = 0; i < len; ++i) {
         if ((*vect)[i]->registration.getRegistrationNumber() == id) {
@@ -34,8 +34,11 @@ Vehicle *Vehicle::findById(std::string &id, std::vector<Vehicle *>* vect) {
 }
 
 std::ostream &operator<<(std::ostream &out, const Vehicle &vhcl) {
-    out << vhcl.registration.getRegistrationNumber() << std::endl << vhcl.owner->getName() << std::endl
-        << vhcl.description << std::endl;
+    out << "------------\nRegistration: " <<
+    vhcl.registration.getRegistrationNumber() << "\n" <<
+    "Descrition: " <<
+    vhcl.description << std::endl;
+
     return out;
 }
 
@@ -45,3 +48,4 @@ void Vehicle::removeOwner() {
         this->owner = nullptr;
     }
 }
+

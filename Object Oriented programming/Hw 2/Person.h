@@ -13,6 +13,8 @@ private:
     std::string name;
     std::vector<Vehicle*> vehicles;
 
+    void setId(unsigned int id);
+
 public:
     explicit Person(const std::string& name, unsigned int id);
 
@@ -20,14 +22,16 @@ public:
 
     const std::string &getName() const;
 
+    unsigned int getId() const;
+
     void removeVehicle(Vehicle* vehicle);
 
     const std::vector<Vehicle*> &getVehicles() const;
 
-    static bool idExits(unsigned int id, std::vector<Person*>* vect);
+    static bool idExists(unsigned int id, std::vector<Person*>* vect);
     static Person* findById(unsigned int id, std::vector<Person*>* vect);
 
-    friend std::ostream& operator<<(std::ostream& out, Person& person);
+    friend std::ostream& operator<<(std::ostream& out,const Person& person);
 
     void printCars();
 

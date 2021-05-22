@@ -9,7 +9,9 @@ class   Registration {
 private:
     std::string registrationNumber;
 public:
-    Registration(const std::string &number);
+    Registration();
+
+    explicit Registration(const std::string &number);
 
     const std::string &getRegistrationNumber() const;
 

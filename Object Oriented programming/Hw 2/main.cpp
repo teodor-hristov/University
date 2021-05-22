@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include "Registration.h"
 #include "Person.h"
 #include "Vehicle.h"
@@ -6,66 +7,56 @@
 
 using namespace std;
 
-int main() {
-//    Registration reg("C1234AB");
-//    Person az("Pesho");
-//    Person toi("Sasho");
-//    Vehicle smyrfa(reg, "Seat");
-//    Vehicle corsa(reg, "Corsa");
-//
-//    smyrfa.setOwner(az);
-//
-//    az.addVehicle(smyrfa);
-//    toi.addVehicle(corsa);
-//
-//    smyrfa.setOwner(toi);
-//
-//   az.printCars();
-//   toi.printCars();
-//
-//   corsa.removeOwner();
-//
-//   toi.printCars();
+void freeMemory(std::vector<Registration*>& regs,std::vector<Person*>& people,std::vector<Vehicle*>& vhcls ){
+    size_t regsLen = regs.size();
+    size_t peopleLen = people.size();
+    size_t vehiclesLen = vhcls.size();
 
+    for (int i = 0; i < peopleLen; ++i) {
+        delete people[i];
+    }
+    for (int i = 0; i < regsLen; ++i) {
+        delete regs[i];
+    }
+    for (int i = 0; i < vehiclesLen; ++i) {
+        delete vhcls[i];
+    }
+
+}
+
+int main(int argc, char *argv[]) {
     std::vector<Registration *> regs;
     std::vector<Person *> people;
     std::vector<Vehicle *> vhcls;
 
     CommandInterpreter ci(regs, vhcls, people);
 
-    std::string c = "vehIcle C1234AV kuramiqnko";
-    std::string c1 = "vehIcle C1234AB vtoroto";
-    std::string qnko = "persoN \"Kura qnko\" 12";
-    std::string qnko1 = "persoN \"Kura qnko1\" 13";
-    std::string corsa = "aCQuire 12 C1234AB";
-    std::string corsa1 = "aCQuire 12 C1234AV";
-    std::string release = "reLease 13 C1234AB";
-    std::string remove1 = "rEmOvE 12";
-    std::string remove2 = "remove C1234AB";
+    if (argc < 2) {
+        std::cout << "Start inserting commands: " << "\n";
+        std::cout << "Type END for exit. " << "\n";
+        std::string command;
 
+        while (1) {
+            getline(std::cin, command);
+            if (command == "END") { break; }
+            if(command.length()){
+                ci.interpret(command);
+            }
+        }
 
-    ci.interpret(c);
-    ci.interpret(c1);
+    } else {
+        std::ifstream in(argv[1], std::ios::in);
+        std::string line;
+        for (line; getline(in, line);) {
+            std::cout << line << "\n";
+            ci.interpret(line);
+        }
 
-    ci.interpret(qnko);
-    ci.interpret(qnko1);
-
-    ci.interpret(corsa);
-
-    ci.interpret(corsa1);
-
-    ci.interpret(release);
-
-    ci.interpret(remove1);
-    ci.interpret(remove2);
-
-    for (int i = 0; i < vhcls.size(); ++i) {
-        std::cout << vhcls[i]->getRegistration().getRegistrationNumber() << "\n";
+        in.close();
     }
 
-    for (int i = 0; i < people.size(); ++i) {
-        std::cout << *people[i] << "\n";
-    }
+
+    freeMemory(regs,people, vhcls);
 
     return 0;
 }

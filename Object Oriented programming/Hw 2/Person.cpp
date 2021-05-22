@@ -2,10 +2,16 @@
 #include "Person.h"
 #include "Vehicle.h"
 
-Person::Person(const std::string &name, unsigned int id) : name(name), id(id) {
+Person::Person(const std::string &name, unsigned int id) : name(name) {
+    setId(id);
 }
 
 void Person::addVehicle(Vehicle *vhcl) {
+
+    if(!vhcl){
+        throw std::invalid_argument("Vehicle can't be nullptr!");
+    }
+
     if (vhcl->getOwner()) {
         if (vhcl->getOwner()->id != this->id) {
             vehicles.push_back(vhcl);
@@ -28,12 +34,18 @@ const std::vector<Vehicle *> &Person::getVehicles() const {
 
 void Person::printCars() {
     int size = this->vehicles.size();
+
     for (int i = 0; i < size; ++i) {
-        std::cout << i << ". " << (*vehicles[i]);
+        std::cout << (*vehicles[i]);
     }
 }
 
 void Person::removeVehicle(Vehicle *vehicle) {
+
+    if(vehicle == nullptr){
+        throw std::invalid_argument("Vehicle is not valid!");
+    }
+
     int len = vehicles.size();
 
     for (int i = 0; i < len; ++i) {
@@ -45,7 +57,11 @@ void Person::removeVehicle(Vehicle *vehicle) {
 
 }
 
-bool Person::idExits(unsigned int id, std::vector<Person *>* vect) {
+bool Person::idExists(unsigned int id, std::vector<Person *> *vect) {
+    if(vect == nullptr){
+        throw std::invalid_argument("Vector must be not null!");
+    }
+
     int len = vect->size();
     for (int i = 0; i < len; ++i) {
         if ((*vect)[i]->id == id) { return true; }
@@ -54,22 +70,36 @@ bool Person::idExits(unsigned int id, std::vector<Person *>* vect) {
     return false;
 }
 
-std::ostream &operator<<(std::ostream &out, Person &person) {
+std::ostream &operator<<(std::ostream &out, const Person &person) {
     std::size_t len = person.vehicles.size();
-    out << "Id: " << person.id << " \nName: " << person.name << "\nCars: " << person.vehicles.size();
-
-    //person.printCars();
+    out << "------------\nId: " << person.id << " \nName: " << person.name << "\nCars: " << person.vehicles.size();
 
     return out;
 }
 
-Person *Person::findById(unsigned int id, std::vector<Person *>* vect) {
+Person *Person::findById(unsigned int id, std::vector<Person *> *vect) {
+    if(!vect){
+        throw std::invalid_argument("Vector can't be nullptr!");
+    }
+
     std::size_t len = vect->size();
     for (int i = 0; i < len; ++i) {
         if ((*vect)[i]->id == id) { return (*vect)[i]; }
     }
 
     return nullptr;
+}
+
+unsigned int Person::getId() const {
+    return id;
+}
+
+void Person::setId(unsigned int id) {
+    if (id < 0) {
+        throw std::invalid_argument("Id can't be lower than 0!");
+    } else {
+        this->id = id;
+    }
 }
 
 

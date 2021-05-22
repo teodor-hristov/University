@@ -13,8 +13,8 @@ private:
 
     void createVehicle(const std::vector<std::string> & args);
     void createPerson(const std::vector<std::string> & args);
-    void acquire(std::vector<std::string> & args);
-    void release(std::vector<std::string> & args);
+    void acquire(const std::vector<std::string> & args);
+    void release(const std::vector<std::string> & args);
 
     void remove(const std::vector<std::string> & args);
 
@@ -22,8 +22,11 @@ private:
 
     void show(const std::vector<std::string> & args);
 
-    void showPeople();
-    void showVehicles();
+    void showPerson(const unsigned id) const;
+    void showPeople() const;
+
+    void showVehicle(const std::string& id) const;
+    void showVehicles() const;
 
     void route(std::vector<std::string>& args);
 
