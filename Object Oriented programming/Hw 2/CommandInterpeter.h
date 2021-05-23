@@ -22,7 +22,7 @@ private:
 
     void show(const std::vector<std::string> & args);
 
-    void showPerson(const unsigned id) const;
+    void showPerson(unsigned id) const;
     void showPeople() const;
 
     void showVehicle(const std::string& id) const;
@@ -44,4 +44,4 @@ public:
 
 };
 
-#endif //HW_2_COMMANDINTERPETER_H
+#endif

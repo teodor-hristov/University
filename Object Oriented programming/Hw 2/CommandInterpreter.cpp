@@ -28,6 +28,10 @@ CommandInterpreter::CommandInterpreter(std::vector<Registration *> &regs,
 }
 
 void CommandInterpreter::interpret(std::string commandLine) {
+    if(commandLine.length() == 0){
+        throw std::invalid_argument("Empty command line!");
+    }
+
     std::vector<std::string> commandParts;
     size_t pos = 0;
     size_t quotePos = 0;
@@ -81,7 +85,9 @@ void CommandInterpreter::interpret(std::string commandLine) {
 }
 
 void CommandInterpreter::removeWs(std::string &str) {
-    str.erase(remove_if(str.begin(), str.end(), isspace), str.end());
+    if(str.length()){
+        str.erase(remove_if(str.begin(), str.end(), isspace), str.end());
+    }
 }
 
 void CommandInterpreter::route(std::vector<std::string> &args) {
@@ -98,6 +104,7 @@ void CommandInterpreter::route(std::vector<std::string> &args) {
         remove(args);
     } else if (args[0] == "SAVE") {
         save(args);
+        std::cout << "Saved!" << std::endl;
     } else if (args[0] == "SHOW") {
         show(args);
     } else {

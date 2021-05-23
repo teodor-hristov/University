@@ -63,6 +63,7 @@ bool Person::idExists(unsigned int id, std::vector<Person *> *vect) {
     }
 
     int len = vect->size();
+
     for (int i = 0; i < len; ++i) {
         if ((*vect)[i]->id == id) { return true; }
     }
@@ -71,6 +72,11 @@ bool Person::idExists(unsigned int id, std::vector<Person *> *vect) {
 }
 
 std::ostream &operator<<(std::ostream &out, const Person &person) {
+
+    if(&person == nullptr){
+        throw std::invalid_argument("Vector can't be nullptr!");
+    }
+
     std::size_t len = person.vehicles.size();
     out << "------------\nId: " << person.id << " \nName: " << person.name << "\nCars: " << person.vehicles.size();
 
@@ -100,6 +106,14 @@ void Person::setId(unsigned int id) {
     } else {
         this->id = id;
     }
+}
+
+bool Person::operator==(const Person &rhs) const {
+    return id == rhs.id;
+}
+
+bool Person::operator!=(const Person &rhs) const {
+    return !(rhs == *this);
 }
 
 

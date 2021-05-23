@@ -40,7 +40,11 @@ int main(int argc, char *argv[]) {
             getline(std::cin, command);
             if (command == "END") { break; }
             if(command.length()){
-                ci.interpret(command);
+                try {
+                    ci.interpret(command);
+                } catch(const std::invalid_argument &ia){
+                    std::cout << ia.what() << std::endl;
+                }
             }
         }
 

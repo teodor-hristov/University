@@ -28,7 +28,10 @@ TEST_CASE("removeVehicle valid input"){
     Registration r("CA1234AV");
     Vehicle v(&r, "test desc");
     p.addVehicle(&v);
-
     REQUIRE_NOTHROW(p.removeVehicle(&v));
     REQUIRE(p.getVehicles().size() == 0);
+}
+
+TEST_CASE("id exists with nullptr"){
+    REQUIRE_THROWS(Person::idExists(0, nullptr));
 }

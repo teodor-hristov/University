@@ -73,3 +73,12 @@ bool Registration::operator==(const Registration &rhs) const {
 bool Registration::operator!=(const Registration &rhs) const {
     return !(rhs == *this);
 }
+
+std::ostream &operator<<(std::ostream &out, const Registration &reg) {
+    if(&reg == nullptr){
+        throw std::invalid_argument("Registration must be valid object!");
+    }
+
+    out << reg.registrationNumber << std::endl;
+    return out;
+}

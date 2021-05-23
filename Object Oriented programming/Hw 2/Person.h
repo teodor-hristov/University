@@ -33,6 +33,10 @@ public:
 
     friend std::ostream& operator<<(std::ostream& out,const Person& person);
 
+    bool operator==(const Person &rhs) const;
+
+    bool operator!=(const Person &rhs) const;
+
     void printCars();
 
 };

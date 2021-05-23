@@ -26,6 +26,8 @@ public:
     bool operator==(const Registration &rhs) const;
 
     bool operator!=(const Registration &rhs) const;
+
+    friend std::ostream& operator<<(std::ostream& out, const Registration& reg);
 };
 
 #endif

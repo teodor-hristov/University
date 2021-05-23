@@ -19,10 +19,17 @@ const Person *Vehicle::getOwner() const {
 }
 
 void Vehicle::setOwner(Person *value) {
+    if(value == nullptr){
+        throw std::invalid_argument("Person must be valid!");
+    }
     this->owner = value;
 }
 
 Vehicle *Vehicle::findById(const std::string &id, std::vector<Vehicle *>* vect) {
+    if(vect == nullptr){
+        throw std::invalid_argument("Null argument!");
+    }
+
     std::size_t len = vect->size();
     for (int i = 0; i < len; ++i) {
         if ((*vect)[i]->registration.getRegistrationNumber() == id) {
