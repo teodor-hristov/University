@@ -1,0 +1,18 @@
+PERSON "Teodor Ivanov" 2
+PERSON "Teodor Hristov" 0
+PERSON "Sasho Hristov" 1
+PERSON "Georgi Hristov" 3
+PERSON "Teodor Manol" 4
+PERSON "Ivan Ivanov" 123
+VEHICLE C1234AZ "zaichenceto bqlo"
+VEHICLE C1234AV "malka bqla kolichka"
+VEHICLE A1234AV "bql pasat"
+VEHICLE B1234AV "bql1 pasat"
+VEHICLE v1234AV "bql2 pasat"
+VEHICLE g1234AV "bql3 pasat"
+VEHICLE d1234AV "bql4 pasat"
+ACQUIRE 0 C1234AZ
+ACQUIRE 0 C1234AV
+ACQUIRE 0 B1234AV
+ACQUIRE 4 g1234AV
+ACQUIRE 0 d1234AV
