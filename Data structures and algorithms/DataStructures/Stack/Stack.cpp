@@ -4,12 +4,21 @@
 
 #include "Stack.h"
 
-DynamicArray<int> lastElementPosition() {
-
-}
-
 Stack::Stack(){
     this->container = new DynamicArray<int>();
+}
+
+Stack::Stack(const Stack &rhs) : Stack() {
+    *container = *(rhs.container);
+}
+
+Stack &Stack::operator=(const Stack &rhs) {
+    if (&rhs == this)
+        throw std::invalid_argument("Self assign.");
+
+    *container = *(rhs.container);
+
+    return *this;
 }
 
 Stack::~Stack() {
@@ -17,16 +26,17 @@ Stack::~Stack() {
 }
 
 int Stack::Pop() {
-    int temp;
+    if (container->isEmpty())
+        return 0;
 
-    temp = container->getAt(container->Length() - 1);
+    int temp = container->getAt((int)container->Length() - 1);
     container->Remove(container->Length() - 1);
 
     return temp;
 }
 
 void Stack::Push(const int& item) {
-    container->Add(item, container->Length() - 1);
+    container->Add(item, container->Length());
 }
 
 const int& Stack::Peek() const {
@@ -34,4 +44,12 @@ const int& Stack::Peek() const {
         throw std::bad_exception();
 
     return (*container)[this->container->Length() - 1];
+}
+
+bool Stack::empty() const {
+    return container->isEmpty();
+}
+
+size_t Stack::size() const {
+    return container->Length();
 }
