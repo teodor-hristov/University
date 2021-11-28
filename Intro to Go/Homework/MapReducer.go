@@ -75,9 +75,9 @@ func MapReducer(initial int, mapper func(int) int, reducer func(int, int) int) f
 }
 
 func main() {
-	powerSum := MapReducer(0, func(v int) int { return v * v }, func(a, v int) int { return a + v })
+	powerSum := MapReducer(0, func(v int) int { return v + 1 }, func(a, v int) int { return a + v })
 
-	fmt.Printf("powerSum(1, 2, 3, 4): %v\n", powerSum(1, 2, 3, 4)) // 30
-	fmt.Printf("powerSum(1, 2, 3, 4): %v\n", powerSum(1, 2, 3, 4)) // 60
-	fmt.Printf("powerSum(): %v\n", powerSum())                     // 60
+	fmt.Printf("powerSum: %v\n", powerSum(-1, -2, 3, 4)) // 30
+	fmt.Printf("powerSum: %v\n", powerSum(-1, -2, 3, 4)) // 60
+	fmt.Printf("powerSum: %v\n", powerSum())             // 60
 }
