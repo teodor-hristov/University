@@ -7,7 +7,9 @@ func Reducer(initial int, f func(int, int) int) func(...int) int {
 	var (
 		functionRet = func(args ...int) int {
 			for i := range args {
-				ret += args[i]
+				if initial <= i {
+					ret += args[i]
+				}
 			}
 			return ret
 		}
