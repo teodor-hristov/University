@@ -2,14 +2,22 @@
 #define HOMEWORK1_MYSTORE_H
 
 #include <list>
+#include <vector>
 #include "../Interfaces/interface.h"
+#include "../Headers/ClientWrapper.h"
 #include "Header.h"
 
 struct MyStore : Store{
 private:
+    int clientsCount;
+    int workersCount;
     Resource resources{};
-    std::list<Worker> workers;
-    std::list<Client> clients;
+    std::list<Worker> workersSend;
+    std::list<ClientWrapper*> clientsComing;
+    std::list<ClientWrapper*> clientsGoing;
+    std::vector<ClientWrapper*> clientsWaitlist;
+
+    void sort();
 public:
     ActionHandler *actionHandler = nullptr;
 
@@ -21,5 +29,16 @@ public:
     void advanceTo(int minute) override;
     int getBanana() const override;
     int getSchweppes() const override;
+
+    void sendWorker(unsigned minute, ResourceType resource);
+    void retrieveWorker();
+
+    ClientWrapper& getLastClientByGoingTime();
+    ClientWrapper& getFirstByComingTime();
+    ClientWrapper& getFirstByGoingTime();
+
+    void clientDepart(ClientWrapper& client, size_t minute, int banana, int schweppes);
+
+    std::list<Worker> getWorkers();
 };
 #endif //HOMEWORK1_MYSTORE_H

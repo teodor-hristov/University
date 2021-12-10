@@ -42,7 +42,7 @@ struct Client {
 struct Store {
 	/// This method is called to initialize the store state
 	/// For the console executable, starting resources are 0, but some tests will provide amounts more than 0
-	/// @param workerCount - the number of workers this store has
+	/// @param workerCount - the number of workersSend this store has
 	/// @parma startBanana - the amount of bananas the store starts with
 	/// @parma startSchweppes - the amount of schweppes the store starts with
 	virtual void init(int workerCount, int startBanana, int startSchweppes) = 0;

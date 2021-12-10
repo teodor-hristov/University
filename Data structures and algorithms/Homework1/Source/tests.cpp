@@ -98,7 +98,7 @@ struct TestStore : ActionHandler {
 
 #define LastEvent() (store.log.back())
 
-TEST_CASE("No workers, empty store, up to one client") {
+TEST_CASE("No workersSend, empty store, up to one client") {
 	TestStore store;
 	store.init(0, 0, 0);
 
@@ -151,7 +151,7 @@ TEST_CASE("No workers, empty store, up to one client") {
 	}
 }
 
-TEST_CASE("No workers, full store") {
+TEST_CASE("No workersSend, full store") {
 	TestStore store;
 	store.init(0, 1000, 1000);
 	const ClientList three = {
@@ -357,9 +357,9 @@ TEST_CASE("Clients depart and take what they can") {
 		Client{1, 20, 0, 5}
 	});
 
-	SECTION("Sent out workers") {
+	SECTION("Sent out workersSend") {
 		store.advanceTo(3);
-		INFO("Store must send 2 workers, and 1 client has departed");
+		INFO("Store must send 2 workersSend, and 1 client has departed");
 		REQUIRE(store.log.size() == 3);
 	}
 
