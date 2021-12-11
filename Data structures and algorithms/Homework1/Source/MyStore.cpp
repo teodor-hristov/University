@@ -3,10 +3,16 @@
 #include <stdexcept>
 #include "../Headers/MyStore.h"
 
+/*=======================================*Static functions*=======================================*/
+
+/*Predicate for sorting*/
+static bool PComp(const ClientWrapper * const & a, const ClientWrapper * const & b)
+{
+    return *a < *b;
+}
 static int clientGoingMinute(const Client& client){
     return client.arriveMinute + client.maxWaitTime;
 }
-
 static void sendWorkers(MyStore& store, const int& workersForBanana, const int& workersForSchweppes, const int& minute){
     for (int i = 0; i < workersForBanana; ++i) {
         store.sendWorker(minute, ResourceType::banana);
@@ -17,11 +23,9 @@ static void sendWorkers(MyStore& store, const int& workersForBanana, const int& 
     }
 }
 
-/*Predicate for sorting*/
-static bool PComp(const ClientWrapper * const & a, const ClientWrapper * const & b)
-{
-    return *a < *b;
-}
+/*================================================================================================*/
+
+/*=======================================*MyStore methods*=======================================*/
 
 MyStore::MyStore() : resources({0, 0}),
 clientsCount(0), workersCount(0), actionHandler(nullptr) {};
@@ -124,7 +128,7 @@ void MyStore::advanceTo(int minute) {
                     }
                 }
 
-                /*Send banana workers first*/
+                /*Send banana workers firstNode*/
                 sendWorkers(*this, sendWorkersCount[0], sendWorkersCount[1], i);
                 memset(sendWorkersCount,0,sizeof(sendWorkersCount));
 
@@ -271,3 +275,4 @@ MyStore::~MyStore() {
 Store *createStore() {
     return new MyStore();
 }
+/*================================================================================================*/

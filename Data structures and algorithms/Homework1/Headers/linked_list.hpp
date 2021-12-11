@@ -1,19 +1,25 @@
+#pragma once
+
 #include <cstring>
 #include <cassert>
 #include <iostream>
-#include "Node.h"
+#include "Node.hpp"
 
 template<class T>
 struct linked_list {
+private:
+    node<T> *firstNode{};
+    node<T> *lastNode{};
+    size_t size;
 public:
     linked_list() {
-        first = nullptr;
-        last = nullptr;
+        firstNode = nullptr;
+        lastNode = nullptr;
         size = 0;
     };
 
     ~linked_list() {
-        auto current = first;
+        auto current = firstNode;
         while (current != nullptr) {
             auto next = current->next_element_ptr;
             delete current;
@@ -24,89 +30,75 @@ public:
     void push_back(const T &value) {
         auto *new_last = new node<T>();
         new_last->value = value;
-        if (last != nullptr) {
-            last->next_element_ptr = new_last;
+        if (lastNode != nullptr) {
+            lastNode->next_element_ptr = new_last;
         }
-        if (first == nullptr) {
-            assert(last == nullptr);
-            first = new_last;
+        if (firstNode == nullptr) {
+            assert(lastNode == nullptr);
+            firstNode = new_last;
         }
-        last = new_last;
+        lastNode = new_last;
         size++;
     }
 
     void push_front(const T &value) {
         auto *new_first = new node<T>();
         new_first->value = value;
-        new_first->next_element_ptr = first;
-        if (last == nullptr) {
-            assert(first == nullptr);
-            last = new_first;
+        new_first->next_element_ptr = firstNode;
+        if (lastNode == nullptr) {
+            assert(firstNode == nullptr);
+            lastNode = new_first;
         }
-        first = new_first;
+        firstNode = new_first;
         size++;
 
     }
 
     void pop_front() {
-        if (first == nullptr) {
-            assert(last == nullptr);
-            throw std::invalid_argument("Cannot pop empty list");
+        if (firstNode == nullptr) {
+            assert(lastNode == nullptr);
+            throw std::invalid_argument("Can't pop empty list!");
         }
-        auto first_cpy = first;
-        first = first->next_element_ptr;
+        auto first_cpy = firstNode;
+        firstNode = firstNode->next_element_ptr;
         delete first_cpy;
-        if (first == nullptr) {
-            last = nullptr;
+        if (firstNode == nullptr) {
+            lastNode = nullptr;
         }
         size--;
     }
 
     void pop_back() {
-        if (last == nullptr) {
-            assert(first == nullptr);
-            throw std::invalid_argument("Cannot pop empty list");
+        if (lastNode == nullptr) {
+            assert(firstNode == nullptr);
+            throw std::invalid_argument("Can't pop empty list!");
         }
-        if (first == last) {
-            delete first;
-            first = nullptr;
-            last = nullptr;
+        if (firstNode == lastNode) {
+            delete firstNode;
+            firstNode = nullptr;
+            lastNode = nullptr;
             return;
         }
-        auto current = first;
-        while (current->next_element_ptr != last) {
+        auto current = firstNode;
+        while (current->next_element_ptr != lastNode) {
             current = current->next_element_ptr;
         }
         current->next_element_ptr = nullptr;
-        delete last;
-        last = current;
+        delete lastNode;
+        lastNode = current;
         size--;
 
     }
 
-    const T &operator[](size_t index) const {
-        auto current = first;
-        for (size_t id = 0; id < index; id++) {
-            current = current->next_element_ptr;
-        }
-        return current->value;
-    }
-
     bool empty() {
-        return size == 0 || first == nullptr;
+        return size == 0 || firstNode == nullptr;
     }
 
     T &front() {
-        return first->value;
+        return firstNode->value;
     }
 
     T &back() {
-        return last->value;
+        return lastNode->value;
     }
-
-
-private:
-    node<T> *first{};
-    node<T> *last{};
-    size_t size;
 };

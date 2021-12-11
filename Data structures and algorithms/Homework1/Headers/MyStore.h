@@ -13,6 +13,7 @@ private:
     int clientsCount;
     int workersCount;
     Resource resources{};
+
     linked_list<Worker> workersSend;
     linked_list<ClientWrapper*> clientsComing;
     linked_list<ClientWrapper*> clientsGoing;
@@ -24,6 +25,7 @@ private:
 public:
     MyStore();
     ~MyStore() override;
+
     void init(int workerCount, int startBanana, int startSchweppes) override;
     void setActionHandler(ActionHandler *handler) override;
     void addClients(const Client *clients, int count) override;

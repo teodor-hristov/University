@@ -726,7 +726,7 @@ constexpr auto operator "" _catch_sr( char const* rawChars, std::size_t size ) n
 #define CATCH_REC_LIST2_UD(f, userdata, x, peek, ...)   f(userdata, x) CATCH_DEFER ( CATCH_REC_NEXT(peek, CATCH_REC_LIST1_UD) ) ( f, userdata, peek, __VA_ARGS__ )
 
 // Applies the function macro `f` to each of the remaining parameters, inserts commas between the results,
-// and passes userdata as the first parameter to each invocation,
+// and passes userdata as the firstNode parameter to each invocation,
 // e.g. CATCH_REC_LIST_UD(f, x, a, b, c) evaluates to f(x, a), f(x, b), f(x, c)
 #define CATCH_REC_LIST_UD(f, userdata, ...) CATCH_RECURSE(CATCH_REC_LIST2_UD(f, userdata, __VA_ARGS__, ()()(), ()()(), ()()(), 0))
 
@@ -1884,7 +1884,7 @@ namespace Catch {
         static std::string convert(const std::pair<T1, T2>& pair) {
             ReusableStringStream rss;
             rss << "{ "
-                << ::Catch::Detail::stringify(pair.first)
+                << ::Catch::Detail::stringify(pair.firstNode)
                 << ", "
                 << ::Catch::Detail::stringify(pair.second)
                 << " }";
@@ -3942,7 +3942,7 @@ namespace Generators {
         // Returns the current element of the generator
         //
         // \Precondition The generator is either freshly constructed,
-        // or the last call to `next()` returned true
+        // or the lastNode call to `next()` returned true
         virtual T const& get() const = 0;
         using type = T;
     };
@@ -4220,7 +4220,7 @@ namespace Generators {
             // 1) We are still reading the generator
             // 2) We are reading our own cache
 
-            // In the first case, we need to poke the underlying generator.
+            // In the firstNode case, we need to poke the underlying generator.
             // If it happily moves, we are left in that state, otherwise it is time to start reading from our cache
             if (m_current_repeat == 0) {
                 const auto success = m_generator.next();
@@ -4301,7 +4301,7 @@ namespace Generators {
                 m_chunk.push_back(m_generator.get());
                 for (size_t i = 1; i < m_chunk_size; ++i) {
                     if (!m_generator.next()) {
-                        Catch::throw_exception(GeneratorException("Not enough values to initialize the first chunk"));
+                        Catch::throw_exception(GeneratorException("Not enough values to initialize the firstNode chunk"));
                     }
                     m_chunk.push_back(m_generator.get());
                 }
@@ -4846,7 +4846,7 @@ namespace Catch {
 #include <string>
 
 // NB. Any general catch headers included here must be included
-// in catch.hpp first to make sure they are included by the single
+// in catch.hpp firstNode to make sure they are included by the single
 // header for non obj-usage
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -6186,7 +6186,7 @@ namespace Catch {
         void printClosedHeader(std::string const& _name);
         void printOpenHeader(std::string const& _name);
 
-        // if string has a : in first line will set indent to follow it on
+        // if string has a : in firstNode line will set indent to follow it on
         // subsequent lines
         void printHeaderString(std::string const& _string, std::size_t indent = 0);
 
@@ -6954,11 +6954,11 @@ namespace Catch {
         namespace Detail {
             using sample = std::vector<double>;
 
-            double weighted_average_quantile(int k, int q, std::vector<double>::iterator first, std::vector<double>::iterator last);
+            double weighted_average_quantile(int k, int q, std::vector<double>::iterator firstNode, std::vector<double>::iterator lastNode);
 
             template <typename Iterator>
-            OutlierClassification classify_outliers(Iterator first, Iterator last) {
-                std::vector<double> copy(first, last);
+            OutlierClassification classify_outliers(Iterator firstNode, Iterator lastNode) {
+                std::vector<double> copy(firstNode, lastNode);
 
                 auto q1 = weighted_average_quantile(1, 4, copy.begin(), copy.end());
                 auto q3 = weighted_average_quantile(3, 4, copy.begin(), copy.end());
@@ -6969,8 +6969,8 @@ namespace Catch {
                 auto his = q3 + (iqr * 3.);
 
                 OutlierClassification o;
-                for (; first != last; ++first) {
-                    auto&& t = *first;
+                for (; firstNode != lastNode; ++firstNode) {
+                    auto&& t = *firstNode;
                     if (t < los) ++o.low_severe;
                     else if (t < lom) ++o.low_mild;
                     else if (t > his) ++o.high_severe;
@@ -6981,23 +6981,23 @@ namespace Catch {
             }
 
             template <typename Iterator>
-            double mean(Iterator first, Iterator last) {
-                auto count = last - first;
-                double sum = std::accumulate(first, last, 0.);
+            double mean(Iterator firstNode, Iterator lastNode) {
+                auto count = lastNode - firstNode;
+                double sum = std::accumulate(firstNode, lastNode, 0.);
                 return sum / count;
             }
 
             template <typename URng, typename Iterator, typename Estimator>
-            sample resample(URng& rng, int resamples, Iterator first, Iterator last, Estimator& estimator) {
-                auto n = last - first;
+            sample resample(URng& rng, int resamples, Iterator firstNode, Iterator lastNode, Estimator& estimator) {
+                auto n = lastNode - firstNode;
                 std::uniform_int_distribution<decltype(n)> dist(0, n - 1);
 
                 sample out;
                 out.reserve(resamples);
-                std::generate_n(std::back_inserter(out), resamples, [n, first, &estimator, &dist, &rng] {
+                std::generate_n(std::back_inserter(out), resamples, [n, firstNode, &estimator, &dist, &rng] {
                     std::vector<double> resampled;
                     resampled.reserve(n);
-                    std::generate_n(std::back_inserter(resampled), n, [first, &dist, &rng] { return first[dist(rng)]; });
+                    std::generate_n(std::back_inserter(resampled), n, [firstNode, &dist, &rng] { return firstNode[dist(rng)]; });
                     return estimator(resampled.begin(), resampled.end());
                 });
                 std::sort(out.begin(), out.end());
@@ -7005,15 +7005,15 @@ namespace Catch {
             }
 
             template <typename Estimator, typename Iterator>
-            sample jackknife(Estimator&& estimator, Iterator first, Iterator last) {
-                auto n = last - first;
-                auto second = std::next(first);
+            sample jackknife(Estimator&& estimator, Iterator firstNode, Iterator lastNode) {
+                auto n = lastNode - firstNode;
+                auto second = std::next(firstNode);
                 sample results;
                 results.reserve(n);
 
-                for (auto it = first; it != last; ++it) {
-                    std::iter_swap(it, first);
-                    results.push_back(estimator(second, last));
+                for (auto it = firstNode; it != lastNode; ++it) {
+                    std::iter_swap(it, firstNode);
+                    results.push_back(estimator(second, lastNode));
                 }
 
                 return results;
@@ -7028,21 +7028,21 @@ namespace Catch {
             double normal_quantile(double p);
 
             template <typename Iterator, typename Estimator>
-            Estimate<double> bootstrap(double confidence_level, Iterator first, Iterator last, sample const& resample, Estimator&& estimator) {
-                auto n_samples = last - first;
+            Estimate<double> bootstrap(double confidence_level, Iterator firstNode, Iterator lastNode, sample const& resample, Estimator&& estimator) {
+                auto n_samples = lastNode - firstNode;
 
-                double point = estimator(first, last);
+                double point = estimator(firstNode, lastNode);
                 // Degenerate case with a single sample
                 if (n_samples == 1) return { point, point, point, confidence_level };
 
-                sample jack = jackknife(estimator, first, last);
+                sample jack = jackknife(estimator, firstNode, lastNode);
                 double jack_mean = mean(jack.begin(), jack.end());
                 double sum_squares, sum_cubes;
                 std::tie(sum_squares, sum_cubes) = std::accumulate(jack.begin(), jack.end(), std::make_pair(0., 0.), [jack_mean](std::pair<double, double> sqcb, double x) -> std::pair<double, double> {
                     auto d = jack_mean - x;
                     auto d2 = d * d;
                     auto d3 = d2 * d;
-                    return { sqcb.first + d2, sqcb.second + d3 };
+                    return { sqcb.firstNode + d2, sqcb.second + d3 };
                 });
 
                 double accel = sum_cubes / (6 * std::pow(sum_squares, 1.5));
@@ -7075,7 +7075,7 @@ namespace Catch {
                 double outlier_variance;
             };
 
-            bootstrap_analysis analyse_samples(double confidence_level, int n_resamples, std::vector<double>::iterator first, std::vector<double>::iterator last);
+            bootstrap_analysis analyse_samples(double confidence_level, int n_resamples, std::vector<double>::iterator firstNode, std::vector<double>::iterator lastNode);
         } // namespace Detail
     } // namespace Benchmark
 } // namespace Catch
@@ -7227,11 +7227,11 @@ namespace Catch {
     namespace Benchmark {
         namespace Detail {
             template <typename Duration, typename Iterator>
-            SampleAnalysis<Duration> analyse(const IConfig &cfg, Environment<Duration>, Iterator first, Iterator last) {
+            SampleAnalysis<Duration> analyse(const IConfig &cfg, Environment<Duration>, Iterator firstNode, Iterator lastNode) {
                 if (!cfg.benchmarkNoAnalysis()) {
                     std::vector<double> samples;
-                    samples.reserve(last - first);
-                    std::transform(first, last, std::back_inserter(samples), [](Duration d) { return d.count(); });
+                    samples.reserve(lastNode - firstNode);
+                    std::transform(firstNode, lastNode, std::back_inserter(samples), [](Duration d) { return d.count(); });
 
                     auto analysis = Catch::Benchmark::Detail::analyse_samples(cfg.benchmarkConfidenceInterval(), cfg.benchmarkResamples(), samples.begin(), samples.end());
                     auto outliers = Catch::Benchmark::Detail::classify_outliers(samples.begin(), samples.end());
@@ -7256,11 +7256,11 @@ namespace Catch {
                     };
                 } else {
                     std::vector<Duration> samples;
-                    samples.reserve(last - first);
+                    samples.reserve(lastNode - firstNode);
 
                     Duration mean = Duration(0);
                     int i = 0;
-                    for (auto it = first; it < last; ++it, ++i) {
+                    for (auto it = firstNode; it < lastNode; ++it, ++i) {
                         samples.push_back(Duration(*it));
                         mean += Duration(*it);
                     }
@@ -7728,12 +7728,12 @@ namespace {
         return p * x;
     }
 
-    double standard_deviation(std::vector<double>::iterator first, std::vector<double>::iterator last) {
-        auto m = Catch::Benchmark::Detail::mean(first, last);
-        double variance = std::accumulate(first, last, 0., [m](double a, double b) {
+    double standard_deviation(std::vector<double>::iterator firstNode, std::vector<double>::iterator lastNode) {
+        auto m = Catch::Benchmark::Detail::mean(firstNode, lastNode);
+        double variance = std::accumulate(firstNode, lastNode, 0., [m](double a, double b) {
             double diff = b - m;
             return a + diff * diff;
-            }) / (last - first);
+            }) / (lastNode - firstNode);
             return std::sqrt(variance);
     }
 
@@ -7743,16 +7743,16 @@ namespace Catch {
     namespace Benchmark {
         namespace Detail {
 
-            double weighted_average_quantile(int k, int q, std::vector<double>::iterator first, std::vector<double>::iterator last) {
-                auto count = last - first;
+            double weighted_average_quantile(int k, int q, std::vector<double>::iterator firstNode, std::vector<double>::iterator lastNode) {
+                auto count = lastNode - firstNode;
                 double idx = (count - 1) * k / static_cast<double>(q);
                 int j = static_cast<int>(idx);
                 double g = idx - j;
-                std::nth_element(first, first + j, last);
-                auto xj = first[j];
+                std::nth_element(firstNode, firstNode + j, lastNode);
+                auto xj = firstNode[j];
                 if (g == 0) return xj;
 
-                auto xj1 = *std::min_element(first + (j + 1), last);
+                auto xj1 = *std::min_element(firstNode + (j + 1), lastNode);
                 return xj + g * (xj1 - xj);
             }
 
@@ -7802,13 +7802,13 @@ namespace Catch {
                 return (std::min)(var_out(1), var_out((std::min)(c_max(0.), c_max(mg_min)))) / sb2;
             }
 
-            bootstrap_analysis analyse_samples(double confidence_level, int n_resamples, std::vector<double>::iterator first, std::vector<double>::iterator last) {
+            bootstrap_analysis analyse_samples(double confidence_level, int n_resamples, std::vector<double>::iterator firstNode, std::vector<double>::iterator lastNode) {
                 CATCH_INTERNAL_START_WARNINGS_SUPPRESSION
                 CATCH_INTERNAL_SUPPRESS_GLOBALS_WARNINGS
                 static std::random_device entropy;
                 CATCH_INTERNAL_STOP_WARNINGS_SUPPRESSION
 
-                auto n = static_cast<int>(last - first); // seriously, one can't use integral types without hell in C++
+                auto n = static_cast<int>(lastNode - firstNode); // seriously, one can't use integral types without hell in C++
 
                 auto mean = &Detail::mean<std::vector<double>::iterator>;
                 auto stddev = &standard_deviation;
@@ -7818,8 +7818,8 @@ namespace Catch {
                     auto seed = entropy();
                     return std::async(std::launch::async, [=] {
                         std::mt19937 rng(seed);
-                        auto resampled = resample(rng, n_resamples, first, last, f);
-                        return bootstrap(confidence_level, first, last, resampled, f);
+                        auto resampled = resample(rng, n_resamples, firstNode, lastNode, f);
+                        return bootstrap(confidence_level, firstNode, lastNode, resampled, f);
                     });
                 };
 
@@ -7832,8 +7832,8 @@ namespace Catch {
                 auto Estimate = [=](double(*f)(std::vector<double>::iterator, std::vector<double>::iterator)) {
                     auto seed = entropy();
                     std::mt19937 rng(seed);
-                    auto resampled = resample(rng, n_resamples, first, last, f);
-                    return bootstrap(confidence_level, first, last, resampled, f);
+                    auto resampled = resample(rng, n_resamples, firstNode, lastNode, f);
+                    return bootstrap(confidence_level, firstNode, lastNode, resampled, f);
                 };
 
                 auto mean_estimate = Estimate(mean);
@@ -8021,7 +8021,7 @@ namespace Catch {
         }
 
         void disengage() {
-            assert(m_started && "Handler cannot be uninstalled without being installed first");
+            assert(m_started && "Handler cannot be uninstalled without being installed firstNode");
             m_started = false;
             disengage_platform();
         }
@@ -9836,7 +9836,7 @@ namespace Catch {
                 ( "suite name" )
             | Opt( [&]( bool ){ config.abortAfter = 1; } )
                 ["-a"]["--abort"]
-                ( "abort at first failure" )
+                ( "abort at firstNode failure" )
             | Opt( [&]( int x ){ config.abortAfter = x; }, "no. failures" )
                 ["-x"]["--abortx"]
                 ( "abort after x failures" )
@@ -10585,7 +10585,7 @@ namespace Catch {
             // Extracts the actual name part of an enum instance
             // In other words, it returns the Blue part of Bikeshed::Colour::Blue
             StringRef extractInstanceName(StringRef enumInstance) {
-                // Find last occurrence of ":"
+                // Find lastNode occurrence of ":"
                 size_t name_start = enumInstance.size();
                 while (name_start > 0 && enumInstance[name_start - 1] != ':') {
                     --name_start;
@@ -10686,7 +10686,7 @@ namespace Catch {
     std::string ExceptionTranslatorRegistry::translateActiveException() const {
         try {
 #ifdef __OBJC__
-            // In Objective-C try objective-c exceptions first
+            // In Objective-C try objective-c exceptions firstNode
             @try {
                 return tryTranslators();
             }
@@ -10834,7 +10834,7 @@ namespace Catch {
     FatalConditionHandler::~FatalConditionHandler() = default;
 
     void FatalConditionHandler::engage_platform() {
-        // Register as first handler in current chain
+        // Register as firstNode handler in current chain
         exceptionHandlerHandle = AddVectoredExceptionHandler(1, handleVectoredException);
         if (!exceptionHandlerHandle) {
             CATCH_RUNTIME_ERROR("Could not register vectored exception handler");
@@ -16634,7 +16634,7 @@ void ConsoleReporter::printTestCaseAndSectionHeader() {
         Colour colourGuard(Colour::Headers);
 
         auto
-            it = m_sectionStack.begin() + 1, // Skip first section (test case)
+            it = m_sectionStack.begin() + 1, // Skip firstNode section (test case)
             itEnd = m_sectionStack.end();
         for (; it != itEnd; ++it)
             printHeaderString(it->name, 2);
@@ -16660,7 +16660,7 @@ void ConsoleReporter::printOpenHeader(std::string const& _name) {
     }
 }
 
-// if string has a : in first line will set indent to follow it on
+// if string has a : in firstNode line will set indent to follow it on
 // subsequent lines
 void ConsoleReporter::printHeaderString(std::string const& _string, std::size_t indent) {
     std::size_t i = _string.find(": ");

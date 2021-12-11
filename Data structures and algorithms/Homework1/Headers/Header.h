@@ -18,7 +18,4 @@ struct Worker{
     unsigned returnTime;
     ResourceType resourceType;
 };
-
-
-
 #endif //HOMEWORK1_HEADER_H

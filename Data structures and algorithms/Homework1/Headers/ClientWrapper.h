@@ -1,7 +1,12 @@
 #ifndef HOMEWORK1_CLIENTWRAPPER_H
 #define HOMEWORK1_CLIENTWRAPPER_H
 #include "../Interfaces/interface.h"
-
+/*
+ *
+ * Using ClientWrapper only to add fields: id and isDeparted
+ * and to add comparison operators.
+ *
+ */
 struct ClientWrapper : Client{
     int id;
     bool isDeparted;
