@@ -1,5 +1,9 @@
+#pragma once
+
 #ifndef HOMEWORK1_HEADER_H
 #define HOMEWORK1_HEADER_H
+
+#include "../Interfaces/interface.h"
 
 const int WORKER_TIME_COST = 60;
 const int WORKER_RETURN_QUANTITY = 100;

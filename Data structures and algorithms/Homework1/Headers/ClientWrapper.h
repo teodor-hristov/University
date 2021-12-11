@@ -3,9 +3,11 @@
 #include "../Interfaces/interface.h"
 
 struct ClientWrapper : Client{
+    int id;
     bool isDeparted;
 
-    explicit ClientWrapper(const Client& client);
+    ClientWrapper() = default;
+    explicit ClientWrapper(const Client& client, int id);
     bool operator==(const ClientWrapper &rhs) const;
     bool operator<(const ClientWrapper &rhs) const;
     bool operator>(const ClientWrapper &rhs) const;

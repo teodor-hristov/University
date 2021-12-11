@@ -1,5 +1,5 @@
 #include <iostream>
-#include <list>
+#include <algorithm>
 #include <stdexcept>
 #include "../Headers/MyStore.h"
 
@@ -8,53 +8,49 @@ static int clientGoingMinute(const Client& client){
 }
 
 MyStore::MyStore() : resources({0, 0}),
-clientsCount(0), workersCount(0) {};
-
-MyStore::MyStore(const int bananasAvailable, const int schweppesAvailable) : clientsCount(0),
-workersCount(0){
-    if (bananasAvailable < 0 || schweppesAvailable < 0) {
-        throw std::invalid_argument("Amount cannot be negative!");
-    }
-
-    resources = {bananasAvailable, schweppesAvailable};
-}
+clientsCount(0), workersCount(0), actionHandler(nullptr) {};
 
 void MyStore::setActionHandler(ActionHandler *handler) {
+    if (!handler)
+        return;
+
     actionHandler = handler;
 }
 
 void MyStore::init(int workerCount, int startBanana, int startSchweppes) {
-    *this = MyStore(startBanana, startSchweppes);
+    if (startBanana < 0 || startSchweppes < 0) {
+        throw std::invalid_argument("Amount cannot be negative!");
+    }
+
+    this->resources = {startBanana, startSchweppes};
     this->workersCount = workerCount;
 }
 
-//======= do not commit ======
 bool PComp(const ClientWrapper * const & a, const ClientWrapper * const & b)
 {
     return *a < *b;
 }
-//===========================
-
-void MyStore::sort(){
-    this->clientsGoing.sort(PComp);
-}
 
 void MyStore::addClients(const Client *client, int count) {
+    ClientWrapper* tempWrapper = nullptr;
+
     if (!client) {
         return;
     }
-    ClientWrapper* tempWrapper = nullptr;
-    //TODO: opravi pametta
 
     clientsCount = count;
 
     for (int i = 0; i < count; ++i) {
-        tempWrapper = new ClientWrapper(client[i]);
+        tempWrapper = new ClientWrapper(client[i], i);
         clientsComing.push_back(tempWrapper);
-        clientsGoing.push_back(tempWrapper);
+        allClients.push_back(tempWrapper);
     }
 
-    sort();
+    topToBottomMergeSort(allClients, 0, allClients.size() - 1, PComp);
+
+    for (int i = 0; i < count; ++i) {
+        clientsGoing.push_back(allClients[i]);
+    }
 }
 
 void MyStore::advanceTo(int minute) {
@@ -64,7 +60,20 @@ void MyStore::advanceTo(int minute) {
     int expectedBananas = 0;
     int expectedSchweppes = 0;
 
-    for (size_t i = 0; i <= minute; ++i) {
+    if (clientsComing.empty()){
+        return;
+    }
+
+    unsigned i = 0;
+    while(!clientsComing.empty() || !clientsGoing.empty())
+    {
+        i = std::min((int)(!workersSend.empty() ? workersSend.front().returnTime : INT32_MAX),
+             std::min((!clientsGoing.empty() ? clientGoingMinute(*clientsGoing.front()) : INT32_MAX),
+                      (!clientsComing.empty() ? clientsComing.front()->arriveMinute : INT32_MAX)));
+
+        if (i > minute)
+            break;
+
         /*Send workers*/
         if (!clientsComing.empty() && clientsComing.front()->arriveMinute == i)
         {
@@ -77,18 +86,28 @@ void MyStore::advanceTo(int minute) {
             {
                 while(availableWorkers > 0)
                 {
-                    if ((getBanana() < temp->banana) && (temp->banana - (getBanana() + expectedBananas)) > (temp->schweppes - (getSchweppes() + expectedSchweppes)))
-                    {
-                        sendWorker(i, ResourceType::banana);
-                        expectedBananas += WORKER_RETURN_QUANTITY;
-                        availableWorkers--;
+                    if ((getBanana() + expectedBananas >= temp->banana) && (getSchweppes() + expectedSchweppes >= temp->schweppes)){
+                        break;
                     }
 
-                    if ((getBanana() < temp->schweppes) && (temp->schweppes - (getSchweppes() + expectedSchweppes)) > (temp->banana - (getBanana() + expectedBananas)))
+                    if ((getBanana() + expectedBananas < temp->banana) && availableWorkers > 0)
                     {
-                        sendWorker(i, ResourceType::schweppes);
-                        expectedSchweppes += WORKER_RETURN_QUANTITY;
-                        availableWorkers--;
+                        if ((temp->banana - (getBanana() + expectedBananas)) > (temp->schweppes - (getSchweppes() + expectedSchweppes)))
+                        {
+                            sendWorker(i, ResourceType::banana);
+                            expectedBananas += WORKER_RETURN_QUANTITY;
+                            availableWorkers--;
+                        }
+                    }
+
+                    if ((getSchweppes() + expectedSchweppes < temp->schweppes) && availableWorkers > 0)
+                    {
+                        if ((temp->schweppes - (getSchweppes() + expectedSchweppes)) > (temp->banana - (getBanana() + expectedBananas)))
+                        {
+                            sendWorker(i, ResourceType::schweppes);
+                            expectedSchweppes += WORKER_RETURN_QUANTITY;
+                            availableWorkers--;
+                        }
                     }
                 }
 
@@ -102,9 +121,6 @@ void MyStore::advanceTo(int minute) {
         {
             while(!workersSend.empty() && workersSend.front().returnTime == i)
             {
-                retrieveWorker();
-                availableWorkers++;
-
                 if (workersSend.front().resourceType == ResourceType::banana)
                 {
                     expectedBananas -= WORKER_RETURN_QUANTITY;
@@ -113,9 +129,12 @@ void MyStore::advanceTo(int minute) {
                 {
                     expectedSchweppes -= WORKER_RETURN_QUANTITY;
                 }
+
+                retrieveWorker();
+                availableWorkers++;
             }
 
-#if 1
+            /*Waitlist check*/
             for (int j = 0; j < clientsWaitlist.size(); ++j)
             {
                 temp = clientsWaitlist[j];
@@ -124,7 +143,6 @@ void MyStore::advanceTo(int minute) {
                     clientDepart(*temp, i,temp->banana, temp->schweppes);
                 }
             }
-#endif
         }
 
         /*Client gone*/
@@ -155,15 +173,7 @@ ClientWrapper &MyStore::getLastClientByGoingTime() {
     return *clientsGoing.back();
 }
 
-ClientWrapper &MyStore::getFirstByComingTime() {
-    return *clientsComing.front();
-}
-
-ClientWrapper &MyStore::getFirstByGoingTime() {
-    return *clientsGoing.front();
-}
-
-std::list<Worker> MyStore::getWorkers() {
+linked_list<Worker> MyStore::getWorkers() {
     return workersSend;
 }
 
@@ -196,17 +206,14 @@ actionHandler->onWorkerSend(minute, resource);
 }
 
 void MyStore::clientDepart(ClientWrapper& client, size_t minute, int banana, int schweppes) {
-    static int id = 0;
-
     if (client.isDeparted)
         return;
 
-    id++;
     client.isDeparted = true;
 
-    std::cout << id << " " << minute << " " << banana << " " << schweppes << std::endl;
+    std::cout << client.id << " " << minute << " " << banana << " " << schweppes << std::endl;
 #ifdef TESTING
-    actionHandler->onClientDepart(id, minute, banana, schweppes);
+    actionHandler->onClientDepart(client.id, (int)minute, banana, schweppes);
 #endif
 
     if (resources.schweppes < client.schweppes)
@@ -234,6 +241,12 @@ void MyStore::clientDepart(ClientWrapper& client, size_t minute, int banana, int
 
     while(!clientsComing.empty() && clientsComing.front()->isDeparted) {
             clientsComing.pop_front();
+    }
+}
+
+MyStore::~MyStore() {
+    for (int i = 0; i < allClients.size(); ++i) {
+        delete allClients[i];
     }
 }
 

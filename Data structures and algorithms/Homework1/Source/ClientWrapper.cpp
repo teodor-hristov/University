@@ -1,6 +1,6 @@
 #include "../Headers/ClientWrapper.h"
 
-ClientWrapper::ClientWrapper(const Client &client) : Client(client), isDeparted(false){
+ClientWrapper::ClientWrapper(const Client &client, int id) : Client(client), isDeparted(false), id(id){
 }
 
 bool ClientWrapper::operator<(const ClientWrapper &rhs) const {

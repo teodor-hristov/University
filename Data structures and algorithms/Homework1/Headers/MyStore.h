@@ -1,28 +1,29 @@
 #ifndef HOMEWORK1_MYSTORE_H
 #define HOMEWORK1_MYSTORE_H
 
-#include <list>
 #include <vector>
-#include "../Interfaces/interface.h"
-#include "../Headers/ClientWrapper.h"
 #include "Header.h"
+#include "../Headers/Linked_List.hpp"
+#include "../Headers/ClientWrapper.h"
+#include "../Headers/Utils.h"
+#include "../Interfaces/interface.h"
 
 struct MyStore : Store{
 private:
     int clientsCount;
     int workersCount;
     Resource resources{};
-    std::list<Worker> workersSend;
-    std::list<ClientWrapper*> clientsComing;
-    std::list<ClientWrapper*> clientsGoing;
+    linked_list<Worker> workersSend;
+    linked_list<ClientWrapper*> clientsComing;
+    linked_list<ClientWrapper*> clientsGoing;
+
+    std::vector<ClientWrapper*> allClients;
     std::vector<ClientWrapper*> clientsWaitlist;
+    ActionHandler *actionHandler;
 
-    void sort();
 public:
-    ActionHandler *actionHandler = nullptr;
-
     MyStore();
-    MyStore(const int bananasAvailable, const int schweppesAvailable);
+    ~MyStore() override;
     void init(int workerCount, int startBanana, int startSchweppes) override;
     void setActionHandler(ActionHandler *handler) override;
     void addClients(const Client *clients, int count) override;
@@ -34,11 +35,9 @@ public:
     void retrieveWorker();
 
     ClientWrapper& getLastClientByGoingTime();
-    ClientWrapper& getFirstByComingTime();
-    ClientWrapper& getFirstByGoingTime();
 
     void clientDepart(ClientWrapper& client, size_t minute, int banana, int schweppes);
 
-    std::list<Worker> getWorkers();
+    linked_list<Worker> getWorkers();
 };
 #endif //HOMEWORK1_MYSTORE_H
