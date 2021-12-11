@@ -204,9 +204,9 @@ void MyStore::retrieveWorker() {
         return;
     }
 
-#ifdef TESTING
+    if(actionHandler)
     actionHandler->onWorkerBack(workersSend.front().returnTime, workersSend.front().resourceType);
-#endif
+
     std::cout << "D " << workersSend.front().returnTime << (workersSend.front().resourceType == ResourceType::banana ? " BANANA" : " SCHWEPPES") << std::endl;
 
     if (workersSend.front().resourceType == ResourceType::banana){
@@ -221,9 +221,11 @@ void MyStore::retrieveWorker() {
 void MyStore::sendWorker(const unsigned minute, ResourceType resource)
 {
     workersSend.push_back({minute, minute + WORKER_TIME_COST, resource});
-#ifdef TESTING
-actionHandler->onWorkerSend(minute, resource);
-#endif
+
+    if(actionHandler){
+        actionHandler->onWorkerSend(minute, resource);
+    }
+
     std::cout << "W " << minute << (resource == ResourceType::banana ? " BANANA" : " SCHWEPPES") << std::endl;
 }
 
@@ -234,9 +236,10 @@ void MyStore::clientDepart(ClientWrapper& client, size_t minute, int banana, int
     client.isDeparted = true;
 
     std::cout << client.id << " " << minute << " " << banana << " " << schweppes << std::endl;
-#ifdef TESTING
+
+    if(actionHandler){
     actionHandler->onClientDepart(client.id, (int)minute, banana, schweppes);
-#endif
+    }
 
     if (resources.schweppes < client.schweppes)
     {

@@ -9,7 +9,6 @@ int clientGoingMinute(const Client& client){
     return client.arriveMinute + client.maxWaitTime;
 }
 
-
 int main() {
     int workers;
     int clients;
@@ -34,21 +33,3 @@ int main() {
 
     delete store;
 }
-
-/*
-5 6
-0 250 300 500
-10 50 0 50
-60 101 30 20
-110 1000 50 490
-130 50 50 210
-160 90 70 20
-
-5 6
-0 250 300 500
-10 50 0 50
-60 101 30 20
-110 1000 50 490
-130 100 70 210
-160 90 70 20
- */

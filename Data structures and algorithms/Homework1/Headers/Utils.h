@@ -1,3 +1,4 @@
+#pragma once
 #ifndef HOMEWORK1_UTILS_H
 #include "ClientWrapper.h"
 
