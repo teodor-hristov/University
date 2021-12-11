@@ -7,7 +7,7 @@ static int clientGoingMinute(const Client& client){
     return client.arriveMinute + client.maxWaitTime;
 }
 
-void sendWorkers(MyStore& store, const int& workersForBanana, const int& workersForSchweppes, const int& minute){
+static void sendWorkers(MyStore& store, const int& workersForBanana, const int& workersForSchweppes, const int& minute){
     for (int i = 0; i < workersForBanana; ++i) {
         store.sendWorker(minute, ResourceType::banana);
     }
@@ -18,7 +18,7 @@ void sendWorkers(MyStore& store, const int& workersForBanana, const int& workers
 }
 
 /*Predicate for sorting*/
-bool PComp(const ClientWrapper * const & a, const ClientWrapper * const & b)
+static bool PComp(const ClientWrapper * const & a, const ClientWrapper * const & b)
 {
     return *a < *b;
 }

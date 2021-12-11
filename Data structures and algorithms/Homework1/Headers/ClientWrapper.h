@@ -8,6 +8,7 @@ struct ClientWrapper : Client{
 
     ClientWrapper() = default;
     explicit ClientWrapper(const Client& client, int id);
+
     bool operator==(const ClientWrapper &rhs) const;
     bool operator<(const ClientWrapper &rhs) const;
     bool operator>(const ClientWrapper &rhs) const;
