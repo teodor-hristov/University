@@ -7,6 +7,22 @@ static int clientGoingMinute(const Client& client){
     return client.arriveMinute + client.maxWaitTime;
 }
 
+void sendWorkers(MyStore& store, const int& workersForBanana, const int& workersForSchweppes, const int& minute){
+    for (int i = 0; i < workersForBanana; ++i) {
+        store.sendWorker(minute, ResourceType::banana);
+    }
+
+    for (int i = 0; i < workersForSchweppes; ++i) {
+        store.sendWorker(minute, ResourceType::schweppes);
+    }
+}
+
+/*Predicate for sorting*/
+bool PComp(const ClientWrapper * const & a, const ClientWrapper * const & b)
+{
+    return *a < *b;
+}
+
 MyStore::MyStore() : resources({0, 0}),
 clientsCount(0), workersCount(0), actionHandler(nullptr) {};
 
@@ -24,11 +40,6 @@ void MyStore::init(int workerCount, int startBanana, int startSchweppes) {
 
     this->resources = {startBanana, startSchweppes};
     this->workersCount = workerCount;
-}
-
-bool PComp(const ClientWrapper * const & a, const ClientWrapper * const & b)
-{
-    return *a < *b;
 }
 
 void MyStore::addClients(const Client *client, int count) {
@@ -59,6 +70,7 @@ void MyStore::advanceTo(int minute) {
     int availableWorkers = workersCount;
     int expectedBananas = 0;
     int expectedSchweppes = 0;
+    int sendWorkersCount[2] = {0};
 
     if (clientsComing.empty()){
         return;
@@ -80,6 +92,7 @@ void MyStore::advanceTo(int minute) {
             temp = clientsComing.front();
             if (getBanana() >= temp->banana && getSchweppes() >= temp->schweppes)
             {
+                /*There is resource for this client -> remove it*/
                 clientDepart(*temp, i,temp->banana, temp->schweppes);
             }
             else
@@ -94,7 +107,7 @@ void MyStore::advanceTo(int minute) {
                     {
                         if ((temp->banana - (getBanana() + expectedBananas)) > (temp->schweppes - (getSchweppes() + expectedSchweppes)))
                         {
-                            sendWorker(i, ResourceType::banana);
+                            sendWorkersCount[0]++;
                             expectedBananas += WORKER_RETURN_QUANTITY;
                             availableWorkers--;
                         }
@@ -104,13 +117,18 @@ void MyStore::advanceTo(int minute) {
                     {
                         if ((temp->schweppes - (getSchweppes() + expectedSchweppes)) > (temp->banana - (getBanana() + expectedBananas)))
                         {
-                            sendWorker(i, ResourceType::schweppes);
+                            sendWorkersCount[1]++;
                             expectedSchweppes += WORKER_RETURN_QUANTITY;
                             availableWorkers--;
                         }
                     }
                 }
 
+                /*Send banana workers first*/
+                sendWorkers(*this, sendWorkersCount[0], sendWorkersCount[1], i);
+                memset(sendWorkersCount,0,sizeof(sendWorkersCount));
+
+                /*Add to wait list and remove from coming*/
                 clientsWaitlist.push_back(clientsComing.front());
                 clientsComing.pop_front();
             }
@@ -134,7 +152,7 @@ void MyStore::advanceTo(int minute) {
                 availableWorkers++;
             }
 
-            /*Waitlist check*/
+            /*Wait list check*/
             for (int j = 0; j < clientsWaitlist.size(); ++j)
             {
                 temp = clientsWaitlist[j];
