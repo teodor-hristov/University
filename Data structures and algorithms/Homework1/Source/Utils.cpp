@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <iostream>
 #include "../Headers/Utils.h"
 
 void merge(std::vector<ClientWrapper *> &inputArr, int start, int mid, int end,
