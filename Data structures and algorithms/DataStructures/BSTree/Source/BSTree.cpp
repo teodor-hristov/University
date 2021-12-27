@@ -1,24 +1,25 @@
 #include "../Header/BSTree.h"
+#include <iostream>
 #include <cassert>
 
-void Node_t::copy(const Node_t &node) {
+void Node::copy(const Node &node) {
     assert(this);
     this->value = node.value;
     this->rInheritor = node.rInheritor;
     this->lInheritor = node.lInheritor;
 }
 
-Node_t::Node_t() : value(0), lInheritor(nullptr), rInheritor(nullptr) {}
+Node::Node() : value(0), lInheritor(nullptr), rInheritor(nullptr) {}
 
-Node_t::Node_t(const int value) : Node_t() {
+Node::Node(const int value) : Node() {
     this->value = value;
 }
 
-Node_t::Node_t(const Node_t &rhs) : Node_t() {
+Node::Node(const Node &rhs) : Node() {
     copy(rhs);
 }
 
-Node_t &Node_t::operator=(const Node_t &rhs) {
+Node &Node::operator=(const Node &rhs) {
     if (this == &rhs) {
         assert(false);
     }
@@ -27,19 +28,89 @@ Node_t &Node_t::operator=(const Node_t &rhs) {
     return *this;
 }
 
-BSTree::BSTree() {
-
+int Node::getValue() const {
+    return this->value;
 }
 
-void BSTree::insert(Node node) {
+Node *Node::getLeft() {
+    return this->lInheritor;
+}
 
+Node *Node::getRight() {
+    return this->rInheritor;
+}
+
+void Node::setLInheritor(Node *lInheritor) {
+    this->lInheritor = lInheritor;
+}
+
+void Node::setRInheritor(Node *rInheritor) {
+    this->rInheritor = rInheritor;
+}
+
+BSTree::BSTree() {
+    root = nullptr;
+}
+
+BSTree::BSTree(const int value) {
+    root = new Node(value);
+}
+
+void BSTree::insert(int value) {
+    Node *node = new Node(value);
+    Node *position = root;
+
+    if (!position) {
+        root = node;
+        return;
+    }
+
+    while (true) {
+        if (!position) {
+            position = node;
+            break;
+        }
+
+        if (position->getValue() >= node->getValue()) {
+            if (!position->getLeft()) {
+                position->setLInheritor(node);
+                break;
+            }
+
+            position = position->getLeft();
+        }
+
+        if (position->getValue() < node->getValue()) {
+            if (!position->getRight()) {
+                position->setRInheritor(node);
+                break;
+            }
+
+            position = position->getRight();
+        }
+    }
+}
+
+void BSTree::printRec(Node *node) const {
+    if (!node) {
+        return;
+    }
+
+    std::cout << node->getValue() << " ";
+
+    printRec(node->getLeft());
+    printRec(node->getRight());
+}
+
+void BSTree::print() const {
+    printRec(root);
 }
 
 void BSTree::remove(int value) {
 
 }
 
-void BSTree::find(int value) {
+Node &BSTree::find(int value) {
 
 }
 

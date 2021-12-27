@@ -1,33 +1,43 @@
 #ifndef BSTREE_BSTREE_H
 #define BSTREE_BSTREE_H
 
-typedef struct Node_t {
+struct Node {
 private:
     int value;
-    Node_t *lInheritor;
-    Node_t *rInheritor;
+    Node *lInheritor;
+    Node *rInheritor;
 
-    void copy(const Node_t &node);
+    void copy(const Node &node);
 
 public:
-    Node_t();
+    Node();
 
-    Node_t(int value);
+    Node(int value);
 
-    Node_t(const Node_t &rhs);
+    Node(const Node &rhs);
 
-    Node_t &operator=(const Node_t &rhs);
-} *Node;
+    Node &operator=(const Node &rhs);
+
+    int getValue() const;
+    Node* getLeft();
+    Node* getRight();
+    void setLInheritor(Node *lInheritor);
+    void setRInheritor(Node *rInheritor);
+
+};
 
 struct BSTree{
 private:
-    Node root;
+    Node* root;
+
+    void printRec(Node* node) const;
 public:
-    BSTree() = delete;
+    BSTree();
     BSTree(int value);
-    void insert(Node node);
+    void insert(int value);
     void remove(int value);
-    void find(int value);
+    Node& find(int value);
+    void print() const;
     ~BSTree();
 };
 
