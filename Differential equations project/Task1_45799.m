@@ -29,7 +29,7 @@ xmax=10;
 x0=2;
 y0=1;
 
-N=5;
+N=15;
 
 x=x0:(xmin-x0)/100:xmin;
 xx=x0:(xmax-x0)/100:xmax;
@@ -45,7 +45,7 @@ for k=1:N %Iterate
 y_k=y0+cumtrapz(x,f(x,z));
 yy_k=y0+cumtrapz(xx,f(xx,zz));
 
-plot(x,z,xx,zz);
+plot(x,z,'g',xx,zz,'g');
 
 z=y_k;
 zz=yy_k;
