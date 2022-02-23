@@ -19,6 +19,9 @@ This repository is containing resourses i've been using from 1-st year in univer
 <li>Кудрявцев-Сборник задач по математическому анализу т 3</li>
 <li>Ръководство по Анализ Втора част</li>
 <li>Ръководство по Анализ Първа част</li>
+<li>Introduction to Algorithms. Third Edition</li>
+<li>Skiena The Algorithm Design Manual</li>
+<li>Logic for applications</li>
 </ul>
 <li>Programming</li>
 <ul>
