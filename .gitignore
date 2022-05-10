@@ -81,3 +81,6 @@ Data structures and algorithms/DataStructures/CMakeLists.txt
 .gitignore
 .gitignore
 /
+Design and analysis of algorithms (DAA)/.vscode/settings.json
+Design and analysis of algorithms (DAA)/Tasks/.vscode/settings.json
+Design and analysis of algorithms (DAA)/Tasks/.vscode/tasks.json
