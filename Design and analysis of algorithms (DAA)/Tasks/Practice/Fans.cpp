@@ -30,7 +30,7 @@ bool OK(int mid, int n, int k){
 int binarySearch(int *arr, int l, int r, int target){
     if (r < l){
         if (r < 0)
-            return r+1;
+            return -1;
     }
 
     int mid = l + (r-l)/2;
