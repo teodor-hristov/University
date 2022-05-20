@@ -29,7 +29,7 @@ int main(){
     string suff;
     int isPossible = -1;
     int len = 0;
-    
+
     for (int i = 0; i < 64; i++)
     {
         if (times_occured[i] % 2 != 0)
@@ -41,9 +41,9 @@ int main(){
                 break;
             }
         }
-    } 
+    }
 
-    for (int i = 0; i < 100; i++) 
+    for (int i = 0; i < 100; i++)
     {
         for(int h = 0; h < times_occured[i]/2; h++){
             if (i != isPossible){
