@@ -1,3 +1,5 @@
+/*Must know PROLOG for T.Tinchev*/
+
 % Member of a list
 member(X, [X|_]).
 member(X, [_|T]):- member(X, T).
@@ -41,7 +43,32 @@ prefix([H|T], [H|Tmp]):- prefix(T,Tmp).
 suffix(S, L):- append(_, S, L).
 
 %SubList
-subList([],[]).
 subList([],_).
 subList([_|T], L2):- prefix(T, L2).
 subList([H|T], [H|G]):- prefix(T, G).
+
+%is subset VeA eB
+isSubset(A, B):- not(( member(X, A), not(( member(X,B) )) )).
+
+% Equal lists
+equal([],[]).
+equal([X],[X]).
+equal([H|T],[H|T2]):- equal(T,T2).
+
+% Intersection
+intersect(X,A,B):- member(X,A), member(X,B).
+
+%Union
+union(A,B, R):- member(R,A); member(R,B).
+
+% Reverse
+rev([], []).
+rev([H|T], R):- rev(T,X), insert(X, H, R).
+
+%Len
+strlen([],0).
+strlen([_|T], Len):- strlen(T, NewLen), Len is NewLen + 1.
+
+%N-th element
+getNth([X|_], 0, X).
+getNth([_|T], W, X):- getNth(T, Tmp, X), W is Tmp + 1.
