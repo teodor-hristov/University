@@ -81,3 +81,6 @@ Design and analysis of algorithms (DAA)/.vscode/
 Design and analysis of algorithms (DAA)/Tasks/Practice/a.out
 Design and analysis of algorithms (DAA)/Tasks/.vscode/
 Design and analysis of algorithms (DAA)/Tasks/Practice/.vscode/
+*.exe
+*.mod
+*.sum
