@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"container/list"
 	"encoding/binary"
 	"errors"
 	"fmt"
@@ -23,46 +22,26 @@ const (
 
 type MusicPlayer struct {
 	voiceConn *discordgo.VoiceConnection
-	playlist  *list.List
 	isPlaying bool
-	stop      bool
-	next      bool
 }
 
-var mp MusicPlayer
-
-func stop(mp *MusicPlayer) {
-	if mp == nil {
-		return
-	}
-
-	mp.stop = true
-}
-
-func next(mp *MusicPlayer) {
-	if mp == nil {
-		return
-	}
-
-	mp.next = true
-}
+var mp = make(map[string]MusicPlayer)
 
 func discordPlayMusic(guildId string, channelId string, songUrl string) error {
-
 	voiceConn, err := session.ChannelVoiceJoin(guildId, channelId, false, false)
 	if err != nil {
 		return err
 	}
 
-	mp = MusicPlayer{isPlaying: true, voiceConn: voiceConn, stop: false, next: false}
-	if mp.voiceConn.Ready {
-		return playSong(songUrl, &mp)
+	mp[guildId] = MusicPlayer{isPlaying: true, voiceConn: voiceConn}
+	if mp[guildId].voiceConn.Ready {
+		return playSong(songUrl, mp[guildId])
 	}
 
 	return errors.New("Problem finding connecting.")
 }
 
-func playSong(songUrl string, mp *MusicPlayer) error {
+func playSong(songUrl string, mp MusicPlayer) error {
 	if mp.voiceConn == nil {
 		return errors.New("voiceConnection error")
 	}
@@ -117,13 +96,10 @@ func playSong(songUrl string, mp *MusicPlayer) error {
 	for {
 		// read data from ffmpeg stdout
 		err = binary.Read(ffmpegbuf, binary.LittleEndian, &audiobuf)
-		if err == io.EOF || err == io.ErrUnexpectedEOF || err != nil {
-			return err
-		}
 
-		if mp.next || mp.stop {
+		if !mp.isPlaying || err == io.EOF || err == io.ErrUnexpectedEOF || err != nil {
 			mp.isPlaying = false
-			mp.stop = true
+
 			if err := mp.voiceConn.Disconnect(); err != nil {
 				return err
 			}

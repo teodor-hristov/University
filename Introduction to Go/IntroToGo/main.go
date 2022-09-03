@@ -13,9 +13,7 @@ import (
 
 // Bot parameters
 var (
-	GuildID        = flag.String("guild", "", "Test guild ID. If not passed - bot registers commands globally")
-	BotToken       = flag.String("token", "", "Bot access token")
-	RemoveCommands = flag.Bool("rmcmd", true, "Remove all commands after shutdowning or not")
+	BotToken = flag.String("token", "", "Bot access token")
 )
 
 var session *discordgo.Session
@@ -27,6 +25,12 @@ func init() {
 	}
 	//Parse input params
 	flag.Parse()
+
+	connectToDiscord()
+
+	for _, item := range session.State.Guilds {
+		voiceStats[item.ID] = make(map[string]Statistics)
+	}
 }
 
 func addIntents() {
@@ -71,8 +75,6 @@ func disconnectFromDiscord() {
 }
 
 func main() {
-	connectToDiscord()
-
 	addHandlers()
 	addIntents()
 
