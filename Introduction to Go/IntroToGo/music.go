@@ -101,10 +101,6 @@ func playSong(songUrl string, mp MusicPlayer) error {
 
 		if !mp.isPlaying || err == io.EOF || err == io.ErrUnexpectedEOF || err != nil {
 			mp.isPlaying = false
-
-			if err := mp.voiceConn.Disconnect(); err != nil {
-				return err
-			}
 			break
 		}
 
