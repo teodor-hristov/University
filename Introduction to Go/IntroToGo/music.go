@@ -70,12 +70,14 @@ func playSong(songUrl string, mp MusicPlayer) error {
 		return errors.New("Command execution failed!")
 	}
 	fmt.Println("Youtube-DL started.")
+	defer youtubedl.Process.Kill()
 
 	err = ff.Start()
 	if err != nil {
 		return errors.New("Command execution failed!")
 	}
 	fmt.Println("FFMPEG started.")
+	defer ff.Process.Kill()
 
 	ffmpegbuf := bufio.NewReaderSize(musicStream, 16384)
 
