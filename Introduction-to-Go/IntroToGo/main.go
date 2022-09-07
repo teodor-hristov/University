@@ -49,7 +49,7 @@ func voiceStatusUpdate(session *discordgo.Session, event *discordgo.VoiceStateUp
 func connectToDiscord() {
 	//Connect to discord
 	var err error
-	session, err = discordgo.New("Bot MTAxMzc5Mjg4NTE4MDczOTcxNA.GQKXEe.JP-GAfwvafqbNucRO235AR7ZW2alIm1kRgeA2A")
+	session, err = discordgo.New("Bot " + *BotToken)
 	if err != nil {
 		log.Fatalf("Invalid bot parameters: %v", err)
 		return
@@ -77,18 +77,12 @@ func main() {
 	createCommands()
 
 	// Wait here until CTRL-C or other term signal is received.
-	fmt.Println("----------------------------\nPesho is now running.  Press CTRL-C to exit.\n----------------------------")
+	fmt.Println("----------------------------\nIntroToGo is now running.  Press CTRL-C to exit.\n----------------------------")
 
-	//playSong("https://www.youtube.com/watch?v=VLjsoj1MnWA&list=RDBn2D_OYKF24&index=2")
 	stopBot := make(chan os.Signal, 1)
 	signal.Notify(stopBot, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-stopBot
 
 	// Cleanly close down the Discord session.
 	disconnectFromDiscord()
-
-	/*
-		go build main.go music.go stats.go utils.go commands.go
-		./main.exe -token=MTAxMzc5Mjg4NTE4MDczOTcxNA.GQKXEe.JP-GAfwvafqbNucRO235AR7ZW2alIm1kRgeA2A
-	*/
 }
