@@ -22,3 +22,11 @@
 ```
 /voice-chat-top
 ```
+
+### Build with
+```
+go build main.go stats.go utils.go music.go commands.go
+```
+```
+./main.exe -token= <YOUR DISCORD APP TOKEN>
+```
