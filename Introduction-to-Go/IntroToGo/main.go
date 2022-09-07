@@ -7,23 +7,17 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
 
-// Bot parameters
 var (
 	BotToken = flag.String("token", "", "Bot access token")
+	session  *discordgo.Session
 )
 
-var session *discordgo.Session
-
 func init() {
-	if flag.NFlag() < 1 {
-		fmt.Println("Need to pass auth key!")
-		//TODO: add exit
-	}
-	//Parse input params
 	flag.Parse()
 
 	connectToDiscord()
@@ -55,18 +49,20 @@ func voiceStatusUpdate(session *discordgo.Session, event *discordgo.VoiceStateUp
 func connectToDiscord() {
 	//Connect to discord
 	var err error
-
-	session, err = discordgo.New("Bot " + *BotToken)
+	session, err = discordgo.New("Bot MTAxMzc5Mjg4NTE4MDczOTcxNA.GQKXEe.JP-GAfwvafqbNucRO235AR7ZW2alIm1kRgeA2A")
 	if err != nil {
 		log.Fatalf("Invalid bot parameters: %v", err)
+		return
 	}
 	fmt.Print("Instance created.\n")
 
 	err = session.Open()
 	if err != nil {
 		log.Fatalf("Connection open error: %v", err)
+		return
 	}
 	fmt.Print("Connection created.\n")
+	startTime = time.Now()
 }
 
 func disconnectFromDiscord() {
@@ -93,6 +89,6 @@ func main() {
 
 	/*
 		go build main.go music.go stats.go utils.go commands.go
-		./main.exe -token=MTAxMzc5Mjg4NTE4MDczOTcxNA.GKyJws.QHxTgcUWpU6DMX3eaH9Cl2qqSpr-3X5r9MxrLQ
+		./main.exe -token=MTAxMzc5Mjg4NTE4MDczOTcxNA.GQKXEe.JP-GAfwvafqbNucRO235AR7ZW2alIm1kRgeA2A
 	*/
 }

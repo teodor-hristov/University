@@ -20,20 +20,31 @@ const (
 	frameSize int = 960
 )
 
+/*Map GuildID to MP*/
+var mp = make(map[string]*MusicPlayer)
+
 type MusicPlayer struct {
 	voiceConn *discordgo.VoiceConnection
 	isPlaying bool
 }
 
-var mp = make(map[string]MusicPlayer)
-
 func discordPlayMusic(guildId string, channelId string, songUrl string) error {
+	if len(guildId) == 0 || len(channelId) == 0 || len(songUrl) == 0 {
+		return errors.New("Invalid input!")
+	}
+
 	voiceConn, err := session.ChannelVoiceJoin(guildId, channelId, false, false)
 	if err != nil {
 		return err
 	}
 
-	mp[guildId] = MusicPlayer{isPlaying: true, voiceConn: voiceConn}
+	if mp[guildId] == nil {
+		mp[guildId] = new(MusicPlayer)
+	}
+
+	mp[guildId].isPlaying = true
+	mp[guildId].voiceConn = voiceConn
+
 	if mp[guildId].voiceConn.Ready {
 		return playSong(songUrl, mp[guildId])
 	}
@@ -41,13 +52,13 @@ func discordPlayMusic(guildId string, channelId string, songUrl string) error {
 	return errors.New("Problem finding connecting.")
 }
 
-func playSong(songUrl string, mp MusicPlayer) error {
-	if mp.voiceConn == nil {
+func playSong(songUrl string, mp *MusicPlayer) error {
+	if mp == nil || mp.voiceConn == nil {
 		return errors.New("voiceConnection error")
 	}
 	_, err := url.Parse(songUrl)
 	if err != nil {
-		return errors.New("Url is wrong.")
+		return errors.New("Url is not valid.")
 	}
 
 	//old way to download music changed to yt-dlp due to slow download speed
@@ -86,10 +97,8 @@ func playSong(songUrl string, mp MusicPlayer) error {
 	if err != nil {
 		return errors.New("Cannot speak!")
 	}
-	// Send not "speaking" packet over the websocket when we finish
-	err = mp.voiceConn.Speaking(false)
 
-	send := make(chan []int16, 2)
+	send := make(chan []int16, channels)
 	defer close(send)
 
 	go dgvoice.SendPCM(mp.voiceConn, send)
@@ -101,6 +110,9 @@ func playSong(songUrl string, mp MusicPlayer) error {
 
 		if !mp.isPlaying || err == io.EOF || err == io.ErrUnexpectedEOF || err != nil {
 			mp.isPlaying = false
+			// Send not "speaking" packet over the websocket when we finish
+			mp.voiceConn.Speaking(false)
+
 			break
 		}
 

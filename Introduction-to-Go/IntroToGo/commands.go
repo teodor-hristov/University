@@ -11,7 +11,7 @@ var (
 	commands = []*discordgo.ApplicationCommand{
 		{
 			Name:        "voice-chat-top",
-			Description: "Gives users who talked the most in the server for all times.",
+			Description: "Print users who talked in the server for all times.",
 		},
 		{
 			Name:        "talk-history",
@@ -46,7 +46,7 @@ var (
 		},
 		{
 			Name:        "stop",
-			Description: "If there is music playing the command stops it.",
+			Description: "If there is music playing the command stops it and then disconnects.",
 		},
 	}
 
@@ -59,18 +59,19 @@ var (
 )
 
 func stopCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	var sb strings.Builder
+	player := mp[i.GuildID]
+
 	if s == nil || i == nil {
 		return
 	}
-	var sb strings.Builder
-	player := mp[i.GuildID]
-	if !player.isPlaying {
+
+	if player == nil || !player.isPlaying {
 		sb.WriteString("🔸There is no song playing!\n")
 	} else {
 		sb.WriteString("🔸Song stopped.\n")
+		player.isPlaying = false
 	}
-
-	player.isPlaying = false
 
 	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		// Ignore type for now, they will be discussed in "responses"
@@ -85,6 +86,7 @@ func playCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	if s == nil || i == nil {
 		return
 	}
+
 	// Access options in the order provided by the user.
 	options := i.ApplicationCommandData().Options
 
@@ -96,7 +98,7 @@ func playCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 
 	var sb strings.Builder
 
-	if mp[i.GuildID].isPlaying {
+	if mp[i.GuildID] != nil && mp[i.GuildID].isPlaying {
 		sb.WriteString("🔸Song is already going!\n")
 	}
 
@@ -111,8 +113,8 @@ func playCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		sb.WriteString("🔸Not valid url!\n")
 	}
 
-	found := GetChannel(i.GuildID, channelopt.StringValue())
-	if found == nil {
+	channel := GetChannel(i.GuildID, channelopt.StringValue())
+	if channel == nil {
 		sb.WriteString("🔸Channel not found")
 	}
 
@@ -121,9 +123,13 @@ func playCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		sb.WriteString(urlopt.StringValue())
 		sb.WriteString("\n")
 		go func() {
-			err := discordPlayMusic(i.GuildID, found.ID, urlopt.StringValue())
+			fmt.Printf("id: %s\n", channel.ID)
+			err := discordPlayMusic(i.GuildID, channel.ID, urlopt.StringValue())
+			if err != nil {
+				fmt.Print(err)
+			}
+
 			mp[i.GuildID].voiceConn.Disconnect()
-			fmt.Println(err)
 		}()
 	}
 
@@ -173,7 +179,7 @@ func voiceChatTopCommand(session *discordgo.Session, event *discordgo.Interactio
 		return
 	}
 	var sb strings.Builder
-	if len(voiceStats) > 0 {
+	if len(voiceStats[event.GuildID]) > 0 {
 		top := make([]Pair, len(voiceStats))
 
 		i := 0

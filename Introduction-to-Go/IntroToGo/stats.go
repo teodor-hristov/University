@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"strings"
 	"time"
 
@@ -18,7 +17,10 @@ type Statistics struct {
 	timeLeft      []time.Time
 }
 
-var voiceStats = make(map[string]map[string]Statistics)
+var (
+	voiceStats = make(map[string]map[string]Statistics)
+	startTime  time.Time
+)
 
 func UserJoined(event *discordgo.VoiceStateUpdate) {
 	if event == nil {
@@ -43,7 +45,6 @@ func UserLeft(event *discordgo.VoiceStateUpdate) {
 	}
 
 	userName := event.Member.User.Username
-
 	entry := voiceStats[event.GuildID][userName]
 
 	entry.isTalking = false
@@ -51,7 +52,7 @@ func UserLeft(event *discordgo.VoiceStateUpdate) {
 
 	//the only reason for len(voiceStats[event.GuildID][userName].timeJoined) to be 0 is when bot is after the other person (who left)
 	if len(voiceStats[event.GuildID][userName].timeJoined) == 0 {
-		entry.timeJoined = append(voiceStats[event.GuildID][session.State.User.Username].timeJoined)
+		entry.timeJoined = append(entry.timeJoined, startTime)
 	}
 	//entry.channelID = event.ChannelID on leave no channelID is given
 	entry.secondsTalked += uint64(time.Now().Sub(entry.timeJoined[len(entry.timeJoined)-1]).Abs().Seconds())
@@ -74,23 +75,23 @@ func UserLeft(event *discordgo.VoiceStateUpdate) {
 func UserVoiceHistory(guildId string, userName string) string {
 	var res strings.Builder
 
-	minStats := int(math.Min(float64(len(voiceStats[guildId][userName].timeJoined)), float64(len(voiceStats[guildId][userName].timeLeft))))
-	delta := len(voiceStats[guildId][userName].timeJoined) - len(voiceStats[guildId][userName].timeLeft)
+	arrLen := len(voiceStats[guildId][userName].timeJoined) + len(voiceStats[guildId][userName].timeLeft)
+	join := 0
+	left := 0
 
-	for i := 0; i < minStats; i++ {
-		res.WriteString("Joined at: ")
-		res.WriteString(voiceStats[guildId][userName].timeJoined[i].String())
+	for i := 0; i < arrLen; i++ {
 		res.WriteString("\n")
+		if len(voiceStats[guildId][userName].timeJoined) > join && voiceStats[guildId][userName].timeJoined[join].Before(voiceStats[guildId][userName].timeLeft[left]) {
+			res.WriteString("**Joined at:** ")
+			res.WriteString(voiceStats[guildId][userName].timeJoined[join].String())
+			join++
 
-		res.WriteString("Left at: ")
-		res.WriteString(voiceStats[guildId][userName].timeLeft[i].String())
-		res.WriteString("\n")
-	}
+		} else {
+			res.WriteString("**Left at:** ")
+			res.WriteString(voiceStats[guildId][userName].timeLeft[left].String())
+			left++
+		}
 
-	if delta > 0 {
-		res.WriteString("Joined at: ")
-		res.WriteString(voiceStats[guildId][userName].timeJoined[len(voiceStats[guildId][userName].timeJoined)-1].String())
-		res.WriteString("\n")
 	}
 
 	return res.String()
