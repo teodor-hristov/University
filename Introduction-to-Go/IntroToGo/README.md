@@ -30,3 +30,9 @@ go build main.go stats.go utils.go music.go commands.go
 ```
 ./main.exe -token= <YOUR DISCORD APP TOKEN>
 ```
+
+### Feature ideas
+* Add playlist queue
+* Add download song/playlist command
+* Add next/pause/prev song command
+* Add search song by name
