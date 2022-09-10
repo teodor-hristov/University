@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+	"os/exec"
 	"sort"
 	"strings"
 
@@ -31,4 +33,18 @@ func GetChannel(guildId string, channelid string) *discordgo.Channel {
 	}
 
 	return nil
+}
+
+func getSongName(url string) (string, error) {
+	youtubedl := exec.Command("yt-dlp", "--get-title", url, "-o", "-")
+	out, err := youtubedl.CombinedOutput()
+
+	if err != nil {
+		return "", errors.New("Youtube-dl pipe problem.")
+	}
+
+	defer youtubedl.Process.Kill()
+	youtubedl.Wait()
+
+	return string(out), nil
 }
