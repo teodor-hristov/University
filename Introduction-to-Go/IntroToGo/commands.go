@@ -45,6 +45,24 @@ var (
 			},
 		},
 		{
+			Name:        "download",
+			Description: "IntroToGo bot starts downloading youtube song from given link and sends it to chat.",
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "url",
+					Description: "Youtube/Soundcloud song url",
+					Required:    true,
+				},
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "format",
+					Description: "Output format for the song",
+					Required:    true,
+				},
+			},
+		},
+		{
 			Name:        "stop",
 			Description: "If there is music playing the command stops it and then disconnects.",
 		},
@@ -55,6 +73,7 @@ var (
 		"talk-history":   talkHistoryCommand,
 		"play":           playCommand,
 		"stop":           stopCommand,
+		"download":       downloadSongCommand,
 	}
 )
 
@@ -130,6 +149,54 @@ func playCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			}
 
 			mp[i.GuildID].voiceConn.Disconnect()
+		}()
+	}
+
+	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+		// Ignore type for now, they will be discussed in "responses"
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		Data: &discordgo.InteractionResponseData{
+			Content: sb.String(),
+		},
+	})
+}
+
+func downloadSongCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	if s == nil || i == nil {
+		return
+	}
+
+	// Access options in the order provided by the user.
+	options := i.ApplicationCommandData().Options
+
+	// Or convert the slice into a map
+	optionMap := make(map[string]*discordgo.ApplicationCommandInteractionDataOption, len(options))
+	for _, opt := range options {
+		optionMap[opt.Name] = opt
+	}
+
+	var sb strings.Builder
+
+	// When the option exists, ok = true
+	formatopt, ok := optionMap["format"]
+	if !ok {
+		sb.WriteString("🔸Not valid channel!\n")
+	}
+
+	urlopt, ok := optionMap["url"]
+	if !ok {
+		sb.WriteString("🔸Not valid url!\n")
+	}
+
+	if sb.Len() == 0 {
+		sb.WriteString("🎥  Downloading: ")
+		sb.WriteString(urlopt.StringValue())
+		sb.WriteString("\n")
+		go func() {
+			err := downloadSong(i.ChannelID, urlopt.StringValue(), formatopt.StringValue())
+			if err != nil {
+				fmt.Print(err)
+			}
 		}()
 	}
 
