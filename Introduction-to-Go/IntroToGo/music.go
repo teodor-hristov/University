@@ -7,8 +7,10 @@ import (
 	"fmt"
 	"io"
 	"net/url"
+	"os"
 	"os/exec"
 	"strconv"
+	"strings"
 
 	"github.com/bwmarrin/dgvoice"
 	"github.com/bwmarrin/discordgo"
@@ -121,3 +123,47 @@ func playSong(songUrl string, mp *MusicPlayer) error {
 
 	return nil
 }
+
+func downloadSong(channelId string, songUrl string, format string) error {
+	songName, err := getSongName(songUrl)
+	if err != nil {
+		return err
+	}
+
+	youtubedl := exec.Command("yt-dlp", "--extractor-retries", "3", "-f", "best", songUrl, "-o", "-")
+	out, err := youtubedl.StdoutPipe()
+	if err != nil {
+		return errors.New("Youtube-dl pipe problem.")
+	}
+
+	ff := exec.Command("ffmpeg", "-i", "pipe:0", songName, format)
+	ff.Stdin = out
+	if err != nil {
+		return errors.New("FFMPEG pipe problem.")
+	}
+
+	fmt.Println("Download started.")
+	youtubedl.Start()
+	defer youtubedl.Process.Kill()
+	fmt.Println("Convertion started.")
+	err = ff.Run()
+	defer ff.Process.Kill()
+
+	if err != nil {
+		fmt.Println("Conversion failed.")
+		return err
+	}
+
+	var sb strings.Builder
+	sb.WriteString(songName)
+	sb.WriteString(format)
+	reader, err := os.Open(sb.String())
+	if err != nil {
+		return err
+	}
+
+	session.ChannelFileSend(channelId, sb.String(), reader)
+	return nil
+}
+
+//yt-dlp --extractor-retries 3 -f best https://www.youtube.com/watch?v=TRxnyAOEYD4 --no-keep-video --recode-video mp3
