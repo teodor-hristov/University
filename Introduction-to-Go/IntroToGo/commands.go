@@ -86,9 +86,9 @@ func stopCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	}
 
 	if player == nil || !player.isPlaying {
-		sb.WriteString("🔸There is no song playing!\n")
+		sb.WriteString(CHATE + "🔸There is no song playing!\n")
 	} else {
-		sb.WriteString("🔸Song stopped.\n")
+		sb.WriteString(CHATE + "🔸Song stopped.\n")
 		player.isPlaying = false
 	}
 
@@ -118,23 +118,23 @@ func playCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	var sb strings.Builder
 
 	if mp[i.GuildID] != nil && mp[i.GuildID].isPlaying {
-		sb.WriteString("🔸Song is already going!\n")
+		sb.WriteString(CHATE + "🔸Song is already going!\n")
 	}
 
 	// When the option exists, ok = true
 	channelopt, ok := optionMap["channel"]
 	if !ok {
-		sb.WriteString("🔸Not valid channel!\n")
+		sb.WriteString(CHATE + "🔸Not valid channel!\n")
 	}
 
 	urlopt, ok := optionMap["url"]
 	if !ok {
-		sb.WriteString("🔸Not valid url!\n")
+		sb.WriteString(CHATE + "🔸Not valid url!\n")
 	}
 
 	channel := GetChannel(i.GuildID, channelopt.StringValue())
 	if channel == nil {
-		sb.WriteString("🔸Channel not found")
+		sb.WriteString(CHATE + "🔸Channel not found")
 	}
 
 	if sb.Len() == 0 {
@@ -142,10 +142,10 @@ func playCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		sb.WriteString(urlopt.StringValue())
 		sb.WriteString("\n")
 		go func() {
-			fmt.Printf("id: %s\n", channel.ID)
 			err := discordPlayMusic(i.GuildID, channel.ID, urlopt.StringValue())
 			if err != nil {
 				fmt.Print(err)
+				session.ChannelMessageSend(i.ChannelID, CHATE+" Something went wrong!")
 			}
 
 			mp[i.GuildID].voiceConn.Disconnect()
@@ -180,22 +180,21 @@ func downloadSongCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	// When the option exists, ok = true
 	formatopt, ok := optionMap["format"]
 	if !ok {
-		sb.WriteString("🔸Not valid channel!\n")
+		sb.WriteString(CHATE + "🔸Not valid channel!\n")
 	}
 
 	urlopt, ok := optionMap["url"]
 	if !ok {
-		sb.WriteString("🔸Not valid url!\n")
+		sb.WriteString(CHATE + "🔸Not valid url!\n")
 	}
 
 	if sb.Len() == 0 {
-		sb.WriteString("🎥  Downloading: ")
-		sb.WriteString(urlopt.StringValue())
-		sb.WriteString("\n")
+		sb.WriteString(CHATI + "🎥 Downloading wanted song.\nI'll send download link when finished!👽\n")
 		go func() {
 			err := downloadSong(i.ChannelID, urlopt.StringValue(), formatopt.StringValue())
 			if err != nil {
 				fmt.Print(err)
+				session.ChannelMessageSend(i.ChannelID, CHATE+"Something went wrong... 👀")
 			}
 		}()
 	}

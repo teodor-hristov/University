@@ -9,6 +9,12 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+const (
+	CHATI      = "👋 Hey!"
+	CHATE      = "👳‍♂️Ooops!"
+	NEW_MEMBER = "👋 Glad to see you here "
+)
+
 type Pair struct {
 	First  string
 	Second uint64

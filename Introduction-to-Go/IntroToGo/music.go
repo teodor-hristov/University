@@ -131,8 +131,8 @@ func downloadSong(channelId string, songUrl string, format string) error {
 		return err
 	}
 
-	youtubedl := exec.Command("yt-dlp", "--extractor-retries", "3", "-f", "best", songUrl, "-o", "-")
-	out, err := youtubedl.StdoutPipe()
+	ytdlp := exec.Command("yt-dlp", "--extractor-retries", "3", "-f", "best", songUrl, "-o", "-")
+	out, err := ytdlp.StdoutPipe()
 	if err != nil {
 		return errors.New("Youtube-dl pipe problem.")
 	}
@@ -144,8 +144,11 @@ func downloadSong(channelId string, songUrl string, format string) error {
 	}
 
 	fmt.Println("Download started.")
-	youtubedl.Start()
-	defer youtubedl.Process.Kill()
+	err = ytdlp.Start()
+	defer ytdlp.Process.Kill()
+	if err != nil {
+		return err
+	}
 
 	fmt.Println("Convertion started.")
 	ff.Stderr = stderr
@@ -168,6 +171,7 @@ func downloadSong(channelId string, songUrl string, format string) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
