@@ -10,7 +10,6 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
-	"strings"
 
 	"github.com/bwmarrin/dgvoice"
 	"github.com/bwmarrin/discordgo"
@@ -20,6 +19,7 @@ const (
 	channels  int = 2
 	frameRate int = 48000
 	frameSize int = 960
+	MUSIC_DIR     = "Music/"
 )
 
 /*Map GuildID to MP*/
@@ -125,6 +125,7 @@ func playSong(songUrl string, mp *MusicPlayer) error {
 }
 
 func downloadSong(channelId string, songUrl string, format string) error {
+	var stderr io.Writer
 	songName, err := getSongName(songUrl)
 	if err != nil {
 		return err
@@ -136,7 +137,7 @@ func downloadSong(channelId string, songUrl string, format string) error {
 		return errors.New("Youtube-dl pipe problem.")
 	}
 
-	ff := exec.Command("ffmpeg", "-i", "pipe:0", songName, format)
+	ff := exec.Command("ffmpeg", "-i", "pipe:0", MUSIC_DIR+songName+format)
 	ff.Stdin = out
 	if err != nil {
 		return errors.New("FFMPEG pipe problem.")
@@ -145,24 +146,28 @@ func downloadSong(channelId string, songUrl string, format string) error {
 	fmt.Println("Download started.")
 	youtubedl.Start()
 	defer youtubedl.Process.Kill()
+
 	fmt.Println("Convertion started.")
-	err = ff.Run()
+	ff.Stderr = stderr
+	ffOut, err := ff.CombinedOutput()
 	defer ff.Process.Kill()
 
-	if err != nil {
-		fmt.Println("Conversion failed.")
+	if len(ffOut) > 0 && err != nil {
+		fmt.Printf("Conversion failed. With error: %s\n", string(ffOut))
 		return err
 	}
 
-	var sb strings.Builder
-	sb.WriteString(songName)
-	sb.WriteString(format)
-	reader, err := os.Open(sb.String())
+	reader, err := os.Open(MUSIC_DIR + songName + format)
+	defer reader.Close()
 	if err != nil {
 		return err
 	}
 
-	session.ChannelFileSend(channelId, sb.String(), reader)
+	fmt.Printf("Sending file to discord channel with id: %s\n", channelId)
+	_, err = session.ChannelFileSend(channelId, songName+format, reader)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
