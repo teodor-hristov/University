@@ -37,7 +37,7 @@ func GetChannel(guildId string, channelid string) *discordgo.Channel {
 
 func getSongName(url string) (string, error) {
 	youtubedl := exec.Command("yt-dlp", "--get-title", url, "-o", "-")
-	out, err := youtubedl.CombinedOutput()
+	name, err := youtubedl.CombinedOutput()
 
 	if err != nil {
 		return "", errors.New("Youtube-dl pipe problem.")
@@ -46,5 +46,6 @@ func getSongName(url string) (string, error) {
 	defer youtubedl.Process.Kill()
 	youtubedl.Wait()
 
-	return string(out), nil
+	name = name[:len(name)-1]
+	return string(name), nil
 }
