@@ -1,4 +1,4 @@
-# Discord bot made for Introduction to Go course in Sofia University
+# Discord bot made for Introduction to Go course at Sofia University
 
 ## Supported slash commands:
 /play `<channel name> <url>` - Play song in the given channel (bot can play youtube/soundcloud/web streams)
